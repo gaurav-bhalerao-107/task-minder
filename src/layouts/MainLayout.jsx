@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Route, Routes, useLocation } from "react-router-dom";
+import React, { useEffect, useRef, useState } from 'react'
+import { Route, Routes, useLocation, Link } from "react-router-dom";
 import Dashboard from '../pages/dashboard/Dashboard';
 import Projects from '../pages/projects/Projects';
 
@@ -9,8 +9,9 @@ import logo from "../assets/brand/logo.png";
 const MainLayout = () => {
   const location = useLocation();
   const { hash, pathname, search } = location;
-  const [openSidebar, setopenSidebar] = useState(false);
+  const [openSidebar, setopenSidebar] = useState(true);
   
+
   return (<>
     <section id="main-layout" className='main-layout'>
       <div>
@@ -20,7 +21,7 @@ const MainLayout = () => {
           
 
           <div className="fixed inset-0 flex">
-            <div className={`relative mr-16 flex w-full max-w-[280px] flex-1 transition ease-in-out duration-300 transhtmlForm ${openSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className={`relative mr-16 flex w-full max-w-[280px] flex-1 transition ease-in-out duration-300 ${openSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
               <div className={`absolute left-full top-0 flex w-16 justify-center pt-5 ease-in-out duration-300 ${openSidebar ? 'opacity-100' : 'opacity-0'}`}>
                 <button onClick={() => setopenSidebar(false)} type="button" className="-m-2.5 p-2.5">
                   <span className="sr-only">Close sidebar</span>
@@ -41,7 +42,7 @@ const MainLayout = () => {
                     <li>
                       <ul role="list" className="-mx-2 space-y-5">
                         <li>
-                          <a href="/dashboard" className={`${pathname == '/' || pathname == '/dashboard' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                          <Link to="/dashboard" className={`${pathname == '/' || pathname == '/dashboard' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                             <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/' || pathname == '/dashboard' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" clipRule="evenodd" d="M3.25 4C3.25 3.58579 3.58579 3.25 4 3.25H10C10.4142 3.25 10.75 3.58579 10.75 4V12C10.75 12.4142 10.4142 12.75 10 12.75H4C3.58579 12.75 3.25 12.4142 3.25 12V4ZM4.75 4.75V11.25H9.25V4.75H4.75Z" fill={pathname == '/' || pathname == '/dashboard' ? '#EEF2FC' : '#14367B' } />
                               <path fillRule="evenodd" clipRule="evenodd" d="M3.25 16C3.25 15.5858 3.58579 15.25 4 15.25H10C10.4142 15.25 10.75 15.5858 10.75 16V20C10.75 20.4142 10.4142 20.75 10 20.75H4C3.58579 20.75 3.25 20.4142 3.25 20V16ZM4.75 16.75V19.25H9.25V16.75H4.75Z" fill={pathname == '/' || pathname == '/dashboard' ? '#EEF2FC' : '#14367B' } />
@@ -50,18 +51,18 @@ const MainLayout = () => {
                             </svg>
 
                             Dashboard
-                          </a>
+                          </Link>
                         </li>
 
                         <li>
-                          <a href="/projects" className={`${pathname == '/projects' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                          <Link to="/projects" className={`${pathname == '/projects' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                             <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/projects' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" clipRule="evenodd" d="M9 4.75C8.66848 4.75 8.35054 4.8817 8.11612 5.11612C7.8817 5.35054 7.75 5.66848 7.75 6V15C7.75 15.3315 7.8817 15.6495 8.11612 15.8839C8.35054 16.1183 8.66848 16.25 9 16.25H19C19.3315 16.25 19.6495 16.1183 19.8839 15.8839C20.1183 15.6495 20.25 15.3315 20.25 15V8C20.25 7.66848 20.1183 7.35054 19.8839 7.11612C19.6495 6.8817 19.3315 6.75 19 6.75H14C13.8011 6.75 13.6103 6.67098 13.4697 6.53033L11.6893 4.75H9ZM7.05546 4.05546C7.57118 3.53973 8.27065 3.25 9 3.25H12C12.1989 3.25 12.3897 3.32902 12.5303 3.46967L14.3107 5.25H19C19.7293 5.25 20.4288 5.53973 20.9445 6.05546C21.4603 6.57118 21.75 7.27065 21.75 8V15C21.75 15.7293 21.4603 16.4288 20.9445 16.9445C20.4288 17.4603 19.7293 17.75 19 17.75H9C8.27065 17.75 7.57118 17.4603 7.05546 16.9445C6.53973 16.4288 6.25 15.7293 6.25 15V6C6.25 5.27065 6.53973 4.57118 7.05546 4.05546Z" fill={pathname == '/projects' ? '#EEF2FC' : '#14367B' } />
                               <path fillRule="evenodd" clipRule="evenodd" d="M5 8.75C4.66848 8.75 4.35054 8.8817 4.11612 9.11612C3.8817 9.35054 3.75 9.66848 3.75 10V19C3.75 19.3315 3.8817 19.6495 4.11612 19.8839C4.35054 20.1183 4.66848 20.25 5 20.25H15C15.3315 20.25 15.6495 20.1183 15.8839 19.8839C16.1183 19.6495 16.25 19.3315 16.25 19V17C16.25 16.5858 16.5858 16.25 17 16.25C17.4142 16.25 17.75 16.5858 17.75 17V19C17.75 19.7293 17.4603 20.4288 16.9445 20.9445C16.4288 21.4603 15.7293 21.75 15 21.75H5C4.27065 21.75 3.57118 21.4603 3.05546 20.9445C2.53973 20.4288 2.25 19.7293 2.25 19V10C2.25 9.27065 2.53973 8.57118 3.05546 8.05546C3.57118 7.53973 4.27065 7.25 5 7.25H7C7.41421 7.25 7.75 7.58579 7.75 8C7.75 8.41421 7.41421 8.75 7 8.75H5Z" fill={pathname == '/projects' ? '#EEF2FC' : '#14367B' } />
                             </svg>
 
                             Projects
-                          </a>
+                          </Link>
                         </li>
 
                         <li>
@@ -136,18 +137,20 @@ const MainLayout = () => {
         </div>
 
         {/* <!-- desktop sidebar --> */}
-        <div className={`hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col border`}>
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center justify-center">
-              <img className="h-7 w-auto" src={logo} alt="Task Minder" />
-              <p className='text-3xl -mt-[3px] font-medium ml-2'>Task Minder.</p>
+        <div className={`transition ease-in-out duration-300 hidden lg:fixed lg:inset-y-0 lg:z-50   border ${openSidebar ? 'lg:flex lg:w-72 lg:flex-col' : ''}`}>
+          <div className={`flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4`}>
+            <div className="flex h-20 shrink-0 items-center justify-center">
+              <div className="flex items-center">
+                <img className="h-7 w-auto" src={logo} alt="Task Minder" />
+                <p className='text-3xl -mt-[3px] font-medium ml-2'>Task Minder.</p>
+              </div>
             </div>
             <nav className="flex flex-1 flex-col items-center">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
                   <ul role="list" className="-mx-2 space-y-5">
                     <li>
-                      <a href="/dashboard" className={`${pathname == '/' || pathname == '/dashboard' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                      <Link to="/dashboard" className={`${pathname == '/' || pathname == '/dashboard' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                         <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/' || pathname == '/dashboard' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" clipRule="evenodd" d="M3.25 4C3.25 3.58579 3.58579 3.25 4 3.25H10C10.4142 3.25 10.75 3.58579 10.75 4V12C10.75 12.4142 10.4142 12.75 10 12.75H4C3.58579 12.75 3.25 12.4142 3.25 12V4ZM4.75 4.75V11.25H9.25V4.75H4.75Z" fill={pathname == '/' || pathname == '/dashboard' ? '#EEF2FC' : '#14367B' } />
                           <path fillRule="evenodd" clipRule="evenodd" d="M3.25 16C3.25 15.5858 3.58579 15.25 4 15.25H10C10.4142 15.25 10.75 15.5858 10.75 16V20C10.75 20.4142 10.4142 20.75 10 20.75H4C3.58579 20.75 3.25 20.4142 3.25 20V16ZM4.75 16.75V19.25H9.25V16.75H4.75Z" fill={pathname == '/' || pathname == '/dashboard' ? '#EEF2FC' : '#14367B' } />
@@ -156,18 +159,18 @@ const MainLayout = () => {
                         </svg>
 
                         Dashboard
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
-                      <a href="/projects" className={`${pathname == '/projects' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                      <Link to="/projects" className={`${pathname == '/projects' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                         <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/projects' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" clipRule="evenodd" d="M9 4.75C8.66848 4.75 8.35054 4.8817 8.11612 5.11612C7.8817 5.35054 7.75 5.66848 7.75 6V15C7.75 15.3315 7.8817 15.6495 8.11612 15.8839C8.35054 16.1183 8.66848 16.25 9 16.25H19C19.3315 16.25 19.6495 16.1183 19.8839 15.8839C20.1183 15.6495 20.25 15.3315 20.25 15V8C20.25 7.66848 20.1183 7.35054 19.8839 7.11612C19.6495 6.8817 19.3315 6.75 19 6.75H14C13.8011 6.75 13.6103 6.67098 13.4697 6.53033L11.6893 4.75H9ZM7.05546 4.05546C7.57118 3.53973 8.27065 3.25 9 3.25H12C12.1989 3.25 12.3897 3.32902 12.5303 3.46967L14.3107 5.25H19C19.7293 5.25 20.4288 5.53973 20.9445 6.05546C21.4603 6.57118 21.75 7.27065 21.75 8V15C21.75 15.7293 21.4603 16.4288 20.9445 16.9445C20.4288 17.4603 19.7293 17.75 19 17.75H9C8.27065 17.75 7.57118 17.4603 7.05546 16.9445C6.53973 16.4288 6.25 15.7293 6.25 15V6C6.25 5.27065 6.53973 4.57118 7.05546 4.05546Z" fill={pathname == '/projects' ? '#EEF2FC' : '#14367B' } />
                           <path fillRule="evenodd" clipRule="evenodd" d="M5 8.75C4.66848 8.75 4.35054 8.8817 4.11612 9.11612C3.8817 9.35054 3.75 9.66848 3.75 10V19C3.75 19.3315 3.8817 19.6495 4.11612 19.8839C4.35054 20.1183 4.66848 20.25 5 20.25H15C15.3315 20.25 15.6495 20.1183 15.8839 19.8839C16.1183 19.6495 16.25 19.3315 16.25 19V17C16.25 16.5858 16.5858 16.25 17 16.25C17.4142 16.25 17.75 16.5858 17.75 17V19C17.75 19.7293 17.4603 20.4288 16.9445 20.9445C16.4288 21.4603 15.7293 21.75 15 21.75H5C4.27065 21.75 3.57118 21.4603 3.05546 20.9445C2.53973 20.4288 2.25 19.7293 2.25 19V10C2.25 9.27065 2.53973 8.57118 3.05546 8.05546C3.57118 7.53973 4.27065 7.25 5 7.25H7C7.41421 7.25 7.75 7.58579 7.75 8C7.75 8.41421 7.41421 8.75 7 8.75H5Z" fill={pathname == '/projects' ? '#EEF2FC' : '#14367B' } />
                         </svg>
 
                         Projects
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
@@ -239,8 +242,8 @@ const MainLayout = () => {
           </div>
         </div>
 
-        <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className={`${openSidebar ? 'lg:pl-72' : ''}`}>
+          <div className="sticky top-0 z-40 flex h-20 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button onClick={() => setopenSidebar(openSidebar ? false : true)} type="button" className="-m-2.5 p-2.5 text-gray-700">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -248,13 +251,13 @@ const MainLayout = () => {
             </button>
             <div className="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true"></div>
 
-            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+            <div className="flex items-center flex-1 gap-x-4 self-stretch lg:gap-x-6">
               <div className="relative flex flex-1">
                 <label htmlFor="search-field" className="sr-only">Search</label>
                 <svg className="pointer-events-none absolute inset-y-0 left-3 h-full w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
                 </svg>
-                <input id="search-field" className="block h-full w-full border-0 py-0 pl-10 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" placeholder="Search..." type="search" name="search" />
+                <input autoFocus id="search-field" className="block h-16 w-full border-0 py-0 pl-10 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" placeholder="Search..." type="search" name="search" />
               </div>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
@@ -278,7 +281,7 @@ const MainLayout = () => {
                     </span>
                   </button>
                   
-                  <div className={`absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none ${openSidebar ? 'transition ease-out duration-100 transhtmlForm opacity-0 scale-95' : 'transition ease-in duration-75 transhtmlForm opacity-0 scale-100'}`} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
+                  <div className={`hidden absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none ${openSidebar ? 'transition ease-out duration-100 transhtmlForm opacity-0 scale-95' : 'transition ease-in duration-75 transhtmlForm opacity-0 scale-100'}`} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
                     <a href="#" className="block px-3 py-1 text-sm leading-6 text-gray-900" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your profile</a>
                     <a href="#" className="block px-3 py-1 text-sm leading-6 text-gray-900" role="menuitem" tabIndex="-1" id="user-menu-item-1">Sign out</a>
                   </div>
@@ -287,7 +290,7 @@ const MainLayout = () => {
             </div>
           </div>
 
-          <main className="py-16 md:py-28">
+          <main className="relative pt-16 md:pt-28 pb-10">
             <div className="px-5 md:px-16">
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />

@@ -3,6 +3,8 @@ import "./dashboard.css"
 import { useLocation } from 'react-router-dom';
 import TaskSlider from '../../components/TaskSlider';
 import TaskColumn from '../../components/TaskColumn';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllTasks } from '../../store/reducers/taskReducer';
 
 const Dashboard = () => {
   const location = useLocation();
@@ -18,15 +20,13 @@ const Dashboard = () => {
     "priority": "low"
   }
   
-  const fetchAllTasks = (status) => {
-    const tasks = JSON.parse(localStorage.getItem('task-minder'));
-    if(tasks == null || tasks.length <= 0){
-      return [];
-    }
-    return tasks.filter((item) => {
-      return item.status.id == status;
-    })
-  }
+  const dispatch = useDispatch();
+  
+  const tasks = useSelector((state) => state.tasks.tasks)
+  useEffect(() => {
+    dispatch(fetchAllTasks());
+  }, [])
+  console.log(tasks);
 
   return (
     <>
@@ -96,7 +96,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(242, 113, 84, 0.10)'
               }} 
               title="To Do"
-              tasks={fetchAllTasks('todo')}
+              tasks={tasks.filter((item) => item.status.id == 'todo')}
             />
 
             {/* in progress task list */}
@@ -108,7 +108,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(255, 175, 71, 0.10)'
               }} 
               title="In Progress"
-              tasks={fetchAllTasks('in-progress')}
+              tasks={tasks.filter((item) => item.status.id == 'in-progress')}
             />
 
             {/* done task list */}
@@ -120,7 +120,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(131, 195, 140, 0.10)'
               }} 
               title="Done"
-              tasks={fetchAllTasks('done')}
+              tasks={tasks.filter((item) => item.status.id == 'done')}
             />
           </div>
         </section>

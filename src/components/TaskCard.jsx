@@ -19,7 +19,13 @@ const TaskCard = ({ task }) => {
         <div className="relative py-3 px-3 rounded-[8px] bg-white" draggable="true">
           <div className="">
             <div className="flex items-center justify-between">
-              <img className="h-11 w-11 rounded-full" src='https://randomuser.me/api/portraits/women/26.jpg'/>
+              <div className="">
+                {/* style={ status.id == 'todo' ? {background: 'var(--Primary-100, #EEF2FC)'} : status.id == 'in-progress' ? {background: 'var(--Warning-100, #FFF6EB)'} : status.id == "done" ? {background: 'var(--Error-100, #FDF0EC)'} : {background: 'var(--Primary-100, #EEF2FC)'} } */}
+                <div className="px-3 py-1 rounded-full border-2 cursor-pointer">
+                  <div className="text-black text-xs font-medium leading-normal">{project.label}</div>
+                </div>
+                
+              </div>
               <div className="flex items-center space-x-2">
                 {/* edit */}
                 <div onClick={() => setOpenTaskSlider(true)} className="cursor-pointer">
@@ -38,11 +44,48 @@ const TaskCard = ({ task }) => {
                     <path fillRule="evenodd" clipRule="evenodd" d="M10 3.75C9.9337 3.75 9.87011 3.77634 9.82322 3.82322C9.77634 3.87011 9.75 3.9337 9.75 4V7C9.75 7.41421 9.41421 7.75 9 7.75C8.58579 7.75 8.25 7.41421 8.25 7V4C8.25 3.53587 8.43437 3.09075 8.76256 2.76256C9.09075 2.43437 9.53587 2.25 10 2.25H14C14.4641 2.25 14.9092 2.43437 15.2374 2.76256C15.5656 3.09075 15.75 3.53587 15.75 4V7C15.75 7.41421 15.4142 7.75 15 7.75C14.5858 7.75 14.25 7.41421 14.25 7V4C14.25 3.9337 14.2237 3.87011 14.1768 3.82322C14.1299 3.77634 14.0663 3.75 14 3.75H10Z" fill="#3D3D3D"/>
                   </svg>
                 </div>
+                {/* priority */}
               </div>
             </div>
 
-            <div className="text-sm font-normal text-[#5C5C5C] mt-3 leading-normal">
-              Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
+            <div className="mt-3">
+              <div className="text-lg font-semibold line-clamp-1">{title}</div>
+              <div className="text-sm font-normal text-[#5C5C5C] mt-1 leading-normal">
+                { 
+                  description ? 
+                  description :
+                  <p className="text-gray-400">Task without description</p>
+                }
+              </div>
+            </div>
+            <div className="border-2 h-[2px] mt-3"></div>
+            <div className="mt-2 flex items-center w-full px-1">
+              <div className="flex items-center w-full space-x-1">
+                {
+                  collaborators?.slice(0,3).map((item, index) => {
+                    return (
+                      <a key={index} href="#" className="relative rounded-full hover:opacity-75">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.name.slice(0,1) }</span>
+                      </a>
+                    )
+                  })
+                }
+                {
+                  collaborators.length > 3 &&
+                  <a href="#" className="relative rounded-full hover:opacity-75">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ selectedCollaborators.length - 3 + '+' }</span>
+                  </a>
+                }
+              </div>
+              <div className="">
+                <button type="button" className={`rounded text-sm font-semibold shadow-sm`}>
+                  <div className="flex items-end space-x-[2px]">
+                    <p className={`h-[12px] w-[7px] rounded-md ${priority == 'low' ? 'bg-yellow-500' : priority == "medium" ? 'bg-orange-500' : priority == "high" ? 'bg-red-500' : "bg-gray-300"}`}></p>
+                    <p className={`h-[17px] w-[7px] rounded-md ${priority == 'low' ? 'bg-gray-300' : priority == "medium" ? 'bg-orange-500' : priority == "high" ? 'bg-red-500' : "bg-gray-300"}`}></p>
+                    <p className={`h-[23px] w-[7px] rounded-md ${priority == 'low' ? 'bg-gray-300' : priority == "medium" ? 'bg-gray-300' : priority == "high" ? 'bg-red-500' : "bg-gray-300"}`}></p>
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { fetchAllTasks } from '../store/reducers/taskReducer';
 
 const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   const { task_title, task_description, collaborators, status, project, priority } = payload;
+  
+  const dispatch = useDispatch();
   
   // title & description
   const [title, setTitle] = useState(task_title);
@@ -158,6 +162,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
     let result = items ? [...items, payload] : [payload]
     localStorage.setItem('task-minder', JSON.stringify(result));
     setOpenTaskSlider(false);
+    dispatch(fetchAllTasks());
   }
 
   const openEditSlider = () => {
@@ -224,16 +229,21 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                           <div className="">
                             <h3 className="text-sm font-medium leading-6 text-gray-900">Team Members</h3>
                             <div className="mt-2">
-                              <div className="relative flex space-x-2">
+                              <div className="relative flex items-center space-x-2">
                                 {
-                                  selectedCollaborators.map((item, index) => {
+                                  selectedCollaborators?.slice(0,3).map((item, index) => {
                                     return (
                                       <a key={index} href="#" className="relative rounded-full hover:opacity-75">
-                                        <img className="inline-block h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Tom Cook" />
+                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.name.slice(0,1) }</span>
                                       </a>
-
                                     )
                                   })
+                                }
+                                {
+                                  selectedCollaborators.length > 3 &&
+                                  <a href="#" className="relative rounded-full hover:opacity-75">
+                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ selectedCollaborators.length - 3 + '+' }</span>
+                                  </a>
                                 }
                                 <button onClick={() => setOpenCollaboratorsDropdown(!openCollaboratorsDropdown)} type="button" className="relative inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                                   {/* <span className="absolute -inset-2"></span> */}
@@ -243,14 +253,13 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                                 </button>
                                 {
                                   openCollaboratorsDropdown &&
-                                  <ul className={`absolute z-10 mt-9 max-w-[385px] w-full max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ${openCollaboratorsDropdown ? '' : 'transition ease-in duration-100 opacity-0'}`} tabIndex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+                                  <ul className={`absolute z-10 top-[35px] max-w-[385px] w-full max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ${openCollaboratorsDropdown ? '' : 'transition ease-in duration-100 opacity-0'}`} tabIndex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
                                     {
                                       allcollaborators.map((item, index) => {
                                         return(
                                           <li onClick={() => selectCollaborators(item)} className="cursor-pointer text-gray-900 relative select-none py-2 pl-3 pr-9" key={`listbox-option-${index}`} id={`listbox-option-${index}`} role="option">
                                             <div className="flex items-center">
                                               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.name.slice(0,1) }</span>
-                                              {/* <!-- Selected: "font-semibold", Not Selected: "font-normal" --> */}
                                               <span className={`${selectedCollaborators.map(({ id }) => id).includes(item.id) ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item.name}</span>
                                             </div>
                                             {
@@ -365,27 +374,27 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                             <h3 className="text-sm font-medium leading-6 text-gray-900">Priority</h3>
                             <div className="mt-2">
                               <div className="flex space-x-3">
-                              <button onClick={() => setSelectedPriority("low")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "low" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
-                                <div className="flex items-end space-x-1">
-                                  <p className='h-3 w-2 rounded-md bg-yellow-500'></p>
-                                  <p className='h-5 w-2 rounded-md bg-gray-300'></p>
-                                  <p className='h-7 w-2 rounded-md bg-gray-300'></p>
-                                </div>
-                              </button>
-                              <button onClick={() => setSelectedPriority("medium")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "medium" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
-                                <div className="flex items-end space-x-1">
-                                  <p className='h-3 w-2 rounded-md bg-orange-500'></p>
-                                  <p className='h-5 w-2 rounded-md bg-orange-500'></p>
-                                  <p className='h-7 w-2 rounded-md bg-gray-300'></p>
-                                </div>
-                              </button>
-                              <button onClick={() => setSelectedPriority("high")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "high" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
-                                <div className="flex items-end space-x-1">
-                                  <p className='h-3 w-2 rounded-md bg-red-500'></p>
-                                  <p className='h-5 w-2 rounded-md bg-red-500'></p>
-                                  <p className='h-7 w-2 rounded-md bg-red-500'></p>
-                                </div>
-                              </button>
+                                <button onClick={() => setSelectedPriority("low")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "low" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
+                                  <div className="flex items-end space-x-1">
+                                    <p className='h-3 w-2 rounded-md bg-yellow-500'></p>
+                                    <p className='h-5 w-2 rounded-md bg-gray-300'></p>
+                                    <p className='h-7 w-2 rounded-md bg-gray-300'></p>
+                                  </div>
+                                </button>
+                                <button onClick={() => setSelectedPriority("medium")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "medium" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
+                                  <div className="flex items-end space-x-1">
+                                    <p className='h-3 w-2 rounded-md bg-orange-500'></p>
+                                    <p className='h-5 w-2 rounded-md bg-orange-500'></p>
+                                    <p className='h-7 w-2 rounded-md bg-gray-300'></p>
+                                  </div>
+                                </button>
+                                <button onClick={() => setSelectedPriority("high")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "high" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
+                                  <div className="flex items-end space-x-1">
+                                    <p className='h-3 w-2 rounded-md bg-red-500'></p>
+                                    <p className='h-5 w-2 rounded-md bg-red-500'></p>
+                                    <p className='h-7 w-2 rounded-md bg-red-500'></p>
+                                  </div>
+                                </button>
                               </div>
                             </div>
                           </div>

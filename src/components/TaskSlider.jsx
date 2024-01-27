@@ -1,22 +1,48 @@
 import React, { useState } from 'react'
 
-const TaskSlider = ({ openTaskSlider, setOpenTaskSlider }) => {
+const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
+  const { task_title, task_description, collaborators, status, project, priority } = payload;
+  
   // title & description
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
+  const [title, setTitle] = useState(task_title);
+  const [description, setDescription] = useState(task_description);
 
   // tasks
   const [openTaskDropdown, setOpenTaskDropdown] = useState(false);
-  const [selectedTaskStatus, setSelectedTaskStatus] = useState("To Do");
-  const taskStatusList = ["To Do", "In Progress", "Done"]
+  const [selectedTaskStatus, setSelectedTaskStatus] = useState(status);
+  const taskStatusList = ["To Do", "In Progress", "Done"];
 
   // projects
   const [openProjectDropdown, setOpenProjectDropdown] = useState(false);
-  const [selectedProject, setSelectedProject] = useState("Xsonic Media");
-  const projectsList = ["Xsonic Media", "Expenzee", "Sunroof Energy"]
+  const [selectedProject, setSelectedProject] = useState(project);
+  const projectsList = ["Xsonic Media", "Expenzee", "Sunroof Energy"];
 
   // priority
-  const [selectedPriority, setSelectedPriority] = useState("Low")
+  const [selectedPriority, setSelectedPriority] = useState(priority);
+
+  // selectedCollaborators
+  const [openCollaboratorsDropdown, setOpenCollaboratorsDropdown] = useState(false);
+  const [selectedCollaborators, setSelectedCollaborators] = useState(collaborators);
+  const allcollaborators = [
+    {
+      "id": "gaurav-bhalerao",
+      "name": "Gaurav Bhalerao",
+      "username": "@gaurav",
+      "image": "",
+    },
+    {
+      "id": "john-doe",
+      "name": "John Doe",
+      "username": "@john",
+      "image": "",
+    },
+    {
+      "id": "warran-wade",
+      "name": "Warran Wade",
+      "username": "@warran",
+      "image": "",
+    },
+  ];
   
   // select task status and close the dropdown
   const selectTaskStatus = (status) => {
@@ -28,6 +54,18 @@ const TaskSlider = ({ openTaskSlider, setOpenTaskSlider }) => {
   const selectProject = (project) => {
     setSelectedProject(project);
     setOpenProjectDropdown(false);
+  }
+
+  // select project and close the dropdown
+  const selectCollaborators = (collaborator) => {
+    let selectedIds = selectedCollaborators.map(({ id }) => id)
+    
+    if(selectedIds.includes(collaborator.id)){
+      let newResult = selectedCollaborators.filter(obj => obj.id !== collaborator.id);
+      setSelectedCollaborators(newResult);
+    } else {
+      setSelectedCollaborators([...selectedCollaborators, collaborator])
+    }
   }
 
   const getTaskStatusIcon = (status) => {
@@ -82,7 +120,7 @@ const TaskSlider = ({ openTaskSlider, setOpenTaskSlider }) => {
                   <div className="h-0 flex-1 overflow-y-auto">
                     <div className="bg-indigo-700 px-4 py-6 sm:px-6">
                       <div className="flex items-center justify-between">
-                        <h2 className="text-base font-semibold leading-6 text-white" id="slide-over-title">New Task</h2>
+                        <h2 className="text-base font-semibold leading-6 text-white capitalize" id="slide-over-title">{type} TASK</h2>
                         <div className="ml-3 flex h-7 items-center">
                           <button onClick={() => setOpenTaskSlider(false)} type="button" className="relative rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
                             <span className="absolute -inset-2.5"></span>
@@ -104,44 +142,63 @@ const TaskSlider = ({ openTaskSlider, setOpenTaskSlider }) => {
                           <div className="">
                             <label htmlFor="task-name" className="block text-sm font-medium leading-6 text-gray-900">Task</label>
                             <div className="mt-2">
-                              <input type="text" name="task-name" id="task-name" placeholder="Task Name" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                              <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" name="task-name" id="task-name" placeholder="Task Name" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                             </div>
                           </div>
                           {/* description */}
                           <div className="">
                             <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">Description</label>
                             <div className="mt-2">
-                              <textarea id="description" name="description" placeholder="Description" rows="4" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                              <textarea value={description} onChange={(e) => setDescription(e.target.value)} id="description" name="description" placeholder="Description" rows="4" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
                             </div>
                           </div>
                           {/* assigned to */}
                           <div className="">
                             <h3 className="text-sm font-medium leading-6 text-gray-900">Team Members</h3>
                             <div className="mt-2">
-                              <div className="flex space-x-2">
-                                <a href="#" className="relative rounded-full hover:opacity-75">
-                                  <img className="inline-block h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Tom Cook" />
-                                </a>
-                                <a href="#" className="relative rounded-full hover:opacity-75">
-                                  <img className="inline-block h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Whitney Francis" />
-                                </a>
-                                <a href="#" className="relative rounded-full hover:opacity-75">
-                                  <img className="inline-block h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Leonard Krasner" />
-                                </a>
-                                <a href="#" className="relative rounded-full hover:opacity-75">
-                                  <img className="inline-block h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Floyd Miles" />
-                                </a>
-                                <a href="#" className="relative rounded-full hover:opacity-75">
-                                  <img className="inline-block h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Emily Selman" />
-                                </a>
+                              <div className="relative flex space-x-2">
+                                {
+                                  selectedCollaborators.map((item, index) => {
+                                    return (
+                                      <a key={index} href="#" className="relative rounded-full hover:opacity-75">
+                                        <img className="inline-block h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Tom Cook" />
+                                      </a>
 
-                                <button type="button" className="relative inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                  <span className="absolute -inset-2"></span>
-                                  <span className="sr-only">Add team member</span>
+                                    )
+                                  })
+                                }
+                                <button onClick={() => setOpenCollaboratorsDropdown(!openCollaboratorsDropdown)} type="button" className="relative inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                                  {/* <span className="absolute -inset-2"></span> */}
                                   <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                     <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                                   </svg>
                                 </button>
+                                {
+                                  openCollaboratorsDropdown &&
+                                  <ul className={`absolute z-10 mt-9 max-w-[385px] w-full max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ${openCollaboratorsDropdown ? '' : 'transition ease-in duration-100 opacity-0'}`} tabIndex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+                                    {
+                                      allcollaborators.map((item, index) => {
+                                        return(
+                                          <li onClick={() => selectCollaborators(item)} className="cursor-pointer text-gray-900 relative select-none py-2 pl-3 pr-9" key={`listbox-option-${index}`} id={`listbox-option-${index}`} role="option">
+                                            <div className="flex items-center">
+                                              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.name.slice(0,1) }</span>
+                                              {/* <!-- Selected: "font-semibold", Not Selected: "font-normal" --> */}
+                                              <span className={`${selectedCollaborators.map(({ id }) => id).includes(item.id) ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item.name}</span>
+                                            </div>
+                                            {
+                                              selectedCollaborators.map(({ id }) => id).includes(item.id) &&
+                                              <span className="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                                                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                  <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                                                </svg>
+                                              </span>
+                                            }
+                                          </li>
+                                        )
+                                      })
+                                    }
+                                  </ul>
+                                }
                               </div>
                             </div>
                           </div>

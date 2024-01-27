@@ -7,7 +7,16 @@ import TaskColumn from '../../components/TaskColumn';
 const Dashboard = () => {
   const location = useLocation();
   const { hash, pathname, search } = location;
-  const [openTaskSlider, setOpenTaskSlider] = useState(false)
+  const [openTaskSlider, setOpenTaskSlider] = useState(false);
+
+  const payload = {
+    "task_title": "",
+    "task_description": "",
+    "collaborators": [],
+    "status": "To Do",
+    "project": "",
+    "priority": "Low"
+  }
 
   return (
     <>
@@ -104,7 +113,7 @@ const Dashboard = () => {
         </section>
 
         <section className='task-slider'>
-          <TaskSlider openTaskSlider={openTaskSlider} setOpenTaskSlider={setOpenTaskSlider} />
+          <TaskSlider type="NEW" openTaskSlider={openTaskSlider} setOpenTaskSlider={setOpenTaskSlider} payload={payload} />
         </section>
       </section>
     </>

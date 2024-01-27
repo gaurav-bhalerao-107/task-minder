@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import TaskSlider from "./TaskSlider";
 
-const TaskCard = () => {
+const TaskCard = ({ task }) => {
+  const { title, description, collaborators, status, project, priority } = task;
   const [openTaskSlider, setOpenTaskSlider] = useState(false);
   const payload = {
-    "task_title": "Edit Task Feature",
-    "task_description": "Create a feature to edit the task!",
-    "collaborators": ["gaurav-bhalerao"],
-    "status": {"id": "in-progress", "label": "In Progress"},
-    "project": {"id": "xsonic-media", "label": "Xsonic Media"},
-    "priority": "high"
+    "task_title": title,
+    "task_description": description,
+    "collaborators": collaborators,
+    "status": status,
+    "project": project,
+    "priority": priority,
   }
 
   return (

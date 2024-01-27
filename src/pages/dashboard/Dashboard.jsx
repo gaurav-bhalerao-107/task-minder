@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "./dashboard.css"
 import { useLocation } from 'react-router-dom';
 import TaskSlider from '../../components/TaskSlider';
@@ -17,10 +17,20 @@ const Dashboard = () => {
     "project": {},
     "priority": "low"
   }
+  
+  const fetchAllTasks = (status) => {
+    const tasks = JSON.parse(localStorage.getItem('task-minder'));
+    if(tasks == null || tasks.length <= 0){
+      return [];
+    }
+    return tasks.filter((item) => {
+      return item.status.id == status;
+    })
+  }
 
   return (
     <>
-      <section id="dashboard" className="relative dashboard">
+      <section id="dashboard" className="relative dashboard max-w-[1500px] mx-auto">
         <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between mb-9">
           <div className="text-3xl font-medium pb-5 md:pb-0">Dashboard</div>
           <div className="action-buttons w-full flex items-center justify-start md:justify-end space-x-7">
@@ -86,6 +96,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(242, 113, 84, 0.10)'
               }} 
               title="To Do"
+              tasks={fetchAllTasks('todo')}
             />
 
             {/* in progress task list */}
@@ -97,6 +108,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(255, 175, 71, 0.10)'
               }} 
               title="In Progress"
+              tasks={fetchAllTasks('in-progress')}
             />
 
             {/* done task list */}
@@ -108,6 +120,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(131, 195, 140, 0.10)'
               }} 
               title="Done"
+              tasks={fetchAllTasks('done')}
             />
           </div>
         </section>

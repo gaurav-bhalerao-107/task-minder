@@ -13,9 +13,9 @@ const Dashboard = () => {
     "task_title": "",
     "task_description": "",
     "collaborators": [],
-    "status": "To Do",
-    "project": "",
-    "priority": "Low"
+    "status": {"id": "todo", "label": "To Do"},
+    "project": {},
+    "priority": "low"
   }
 
   return (

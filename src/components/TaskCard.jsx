@@ -7,9 +7,9 @@ const TaskCard = () => {
     "task_title": "Edit Task Feature",
     "task_description": "Create a feature to edit the task!",
     "collaborators": ["gaurav-bhalerao"],
-    "status": "In Progress",
-    "project": "Xsonic Media",
-    "priority": "Low"
+    "status": {"id": "in-progress", "label": "In Progress"},
+    "project": {"id": "xsonic-media", "label": "Xsonic Media"},
+    "priority": "high"
   }
 
   return (

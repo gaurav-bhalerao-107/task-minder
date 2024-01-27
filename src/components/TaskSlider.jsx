@@ -10,12 +10,38 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   // tasks
   const [openTaskDropdown, setOpenTaskDropdown] = useState(false);
   const [selectedTaskStatus, setSelectedTaskStatus] = useState(status);
-  const taskStatusList = ["To Do", "In Progress", "Done"];
+  const taskStatusList = [
+    {
+      "id": "todo",
+      "label": "To Do"
+    },
+    {
+      "id": "in-progress",
+      "label": "In Progress"
+    },
+    {
+      "id": "done",
+      "label": "Done"
+    }
+  ];
 
   // projects
   const [openProjectDropdown, setOpenProjectDropdown] = useState(false);
   const [selectedProject, setSelectedProject] = useState(project);
-  const projectsList = ["Xsonic Media", "Expenzee", "Sunroof Energy"];
+  const projectsList = [
+    {
+      "id": "xsonic-media",
+      "label": "Xsonic Media"
+    },
+    {
+      "id": "expenzee",
+      "label": "Expenzee"
+    },
+    {
+      "id": "sunroof-energy",
+      "label": "Sunroof Energy"
+    }
+  ];
 
   // priority
   const [selectedPriority, setSelectedPriority] = useState(priority);
@@ -69,13 +95,13 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   }
 
   const getTaskStatusIcon = (status) => {
-    if(status == "To Do"){
+    if(status == "todo"){
       return (
         <svg xmlns="http://www.w3.org/2000/svg" className='h-6 w-6' viewBox="0 0 24 24" fill="none">
           <path fillRule="evenodd" clipRule="evenodd" d="M5 3.9375C4.71821 3.9375 4.44796 4.04944 4.2487 4.2487C4.04944 4.44796 3.9375 4.71821 3.9375 5V19C3.9375 19.2818 4.04944 19.552 4.2487 19.7513C4.44796 19.9506 4.71821 20.0625 5 20.0625H19C19.2818 20.0625 19.552 19.9506 19.7513 19.7513C19.9506 19.552 20.0625 19.2818 20.0625 19V5C20.0625 4.71821 19.9506 4.44796 19.7513 4.2487C19.552 4.04944 19.2818 3.9375 19 3.9375H5ZM2.92287 2.92287C3.47376 2.37199 4.22093 2.0625 5 2.0625H19C19.7791 2.0625 20.5262 2.37199 21.0771 2.92287C21.628 3.47376 21.9375 4.22093 21.9375 5V19C21.9375 19.7791 21.628 20.5262 21.0771 21.0771C20.5262 21.628 19.7791 21.9375 19 21.9375H5C4.22093 21.9375 3.47376 21.628 2.92287 21.0771C2.37199 20.5262 2.0625 19.7791 2.0625 19V5C2.0625 4.22093 2.37199 3.47376 2.92287 2.92287Z" fill="#14367B"/>
         </svg>
       )
-    } else if(status == "In Progress") {
+    } else if(status == "in-progress") {
       return (
         <svg xmlns="http://www.w3.org/2000/svg" className='w-6 h-6' viewBox="0 0 24 24" fill="none">
           <path fillRule="evenodd" clipRule="evenodd" d="M5.75 7C5.75 6.58579 6.08579 6.25 6.5 6.25H17.5C17.9142 6.25 18.25 6.58579 18.25 7C18.25 7.41421 17.9142 7.75 17.5 7.75H6.5C6.08579 7.75 5.75 7.41421 5.75 7Z" fill="#8F4F00"/>
@@ -84,7 +110,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
           <path fillRule="evenodd" clipRule="evenodd" d="M5.76256 2.76256C6.09075 2.43437 6.53587 2.25 7 2.25H17C17.4641 2.25 17.9092 2.43437 18.2374 2.76256C18.5656 3.09075 18.75 3.53587 18.75 4V6C18.75 7.79021 18.0388 9.5071 16.773 10.773C15.5071 12.0388 13.7902 12.75 12 12.75C10.2098 12.75 8.4929 12.0388 7.22703 10.773C5.96116 9.5071 5.25 7.79021 5.25 6V4C5.25 3.53587 5.43437 3.09075 5.76256 2.76256ZM7 3.75C6.9337 3.75 6.87011 3.77634 6.82322 3.82322C6.77634 3.87011 6.75 3.9337 6.75 4V6C6.75 7.39239 7.30312 8.72774 8.28769 9.71231C9.27226 10.6969 10.6076 11.25 12 11.25C13.3924 11.25 14.7277 10.6969 15.7123 9.71231C16.6969 8.72774 17.25 7.39239 17.25 6V4C17.25 3.93369 17.2237 3.87011 17.1768 3.82322C17.1299 3.77634 17.0663 3.75 17 3.75H7Z" fill="#8F4F00"/>
         </svg>
       )
-    } else if(status == "Done") {
+    } else if(status == "done") {
       return (
         <svg xmlns="http://www.w3.org/2000/svg"className='h-6 w-6' viewBox="0 0 24 24" fill="none">
           <path fillRule="evenodd" clipRule="evenodd" d="M5 3.75C4.66848 3.75 4.35054 3.8817 4.11612 4.11612C3.8817 4.35054 3.75 4.66848 3.75 5V19C3.75 19.3315 3.8817 19.6495 4.11612 19.8839C4.35054 20.1183 4.66848 20.25 5 20.25H19C19.3315 20.25 19.6495 20.1183 19.8839 19.8839C20.1183 19.6495 20.25 19.3315 20.25 19V5C20.25 4.66848 20.1183 4.35054 19.8839 4.11612C19.6495 3.8817 19.3315 3.75 19 3.75H5ZM3.05546 3.05546C3.57118 2.53973 4.27065 2.25 5 2.25H19C19.7293 2.25 20.4288 2.53973 20.9445 3.05546C21.4603 3.57118 21.75 4.27065 21.75 5V19C21.75 19.7293 21.4603 20.4288 20.9445 20.9445C20.4288 21.4603 19.7293 21.75 19 21.75H5C4.27065 21.75 3.57118 21.4603 3.05546 20.9445C2.53973 20.4288 2.25 19.7293 2.25 19V5C2.25 4.27065 2.53973 3.57118 3.05546 3.05546Z" fill="#81290E"/>
@@ -209,8 +235,8 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                               <div className="relative mt-2">
                                 <button onClick={() => setOpenTaskDropdown(!openTaskDropdown)} type="button" className="cursor-pointer relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                                   <span className="flex items-center">
-                                  { getTaskStatusIcon(selectedTaskStatus) }
-                                    <span className="ml-3 block truncate">{selectedTaskStatus}</span>
+                                  { getTaskStatusIcon(selectedTaskStatus.id) }
+                                    <span className="ml-3 block truncate">{selectedTaskStatus.label}</span>
                                   </span>
                                   <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                                     <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -226,12 +252,12 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                                         return(
                                           <li onClick={() => selectTaskStatus(item)} className="cursor-pointer text-gray-900 relative select-none py-2 pl-3 pr-9" key={`listbox-option-${index}`} id={`listbox-option-${index}`} role="option">
                                             <div className="flex items-center">
-                                              { getTaskStatusIcon(item) }
+                                              { getTaskStatusIcon(item.id) }
                                                 {/* <!-- Selected: "font-semibold", Not Selected: "font-normal" --> */}
-                                                <span className={`${selectedTaskStatus == item ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item}</span>
+                                                <span className={`${selectedTaskStatus.id == item.id ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item.label}</span>
                                             </div>
                                             {
-                                              selectedTaskStatus == item &&
+                                              selectedTaskStatus.id == item.id &&
                                               <span className="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
                                                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
@@ -254,8 +280,8 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                               <div className="relative mt-2">
                                 <button onClick={() => setOpenProjectDropdown(!openProjectDropdown)} type="button" className="cursor-pointer relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                                   <span className="flex items-center">
-                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ selectedProject.slice(0,1) }</span>
-                                    <span className="ml-3 block truncate">{selectedProject}</span>
+                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ selectedProject?.label?.slice(0,1) || "" }</span>
+                                    <span className="ml-3 block truncate">{selectedProject.label}</span>
                                   </span>
                                   <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                                     <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -271,12 +297,12 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                                         return(
                                           <li onClick={() => selectProject(item)} className="cursor-pointer text-gray-900 relative select-none py-2 pl-3 pr-9" key={`listbox-option-${index}`} id={`listbox-option-${index}`} role="option">
                                             <div className="flex items-center">
-                                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.slice(0,1) }</span>
+                                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.label.slice(0,1) }</span>
                                                 {/* <!-- Selected: "font-semibold", Not Selected: "font-normal" --> */}
-                                                <span className={`${selectedProject == item ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item}</span>
+                                                <span className={`${selectedProject.id == item.id ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item.label}</span>
                                             </div>
                                             {
-                                              selectedProject == item &&
+                                              selectedProject.id == item.id &&
                                               <span className="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
                                                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
@@ -297,21 +323,21 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                             <h3 className="text-sm font-medium leading-6 text-gray-900">Priority</h3>
                             <div className="mt-2">
                               <div className="flex space-x-3">
-                              <button onClick={() => setSelectedPriority("Low")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "Low" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
+                              <button onClick={() => setSelectedPriority("low")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "low" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
                                 <div className="flex items-end space-x-1">
                                   <p className='h-3 w-2 rounded-md bg-yellow-500'></p>
                                   <p className='h-5 w-2 rounded-md bg-gray-300'></p>
                                   <p className='h-7 w-2 rounded-md bg-gray-300'></p>
                                 </div>
                               </button>
-                              <button onClick={() => setSelectedPriority("Medium")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "Medium" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
+                              <button onClick={() => setSelectedPriority("medium")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "medium" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
                                 <div className="flex items-end space-x-1">
                                   <p className='h-3 w-2 rounded-md bg-orange-500'></p>
                                   <p className='h-5 w-2 rounded-md bg-orange-500'></p>
                                   <p className='h-7 w-2 rounded-md bg-gray-300'></p>
                                 </div>
                               </button>
-                              <button onClick={() => setSelectedPriority("High")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "High" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
+                              <button onClick={() => setSelectedPriority("high")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "high" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>
                                 <div className="flex items-end space-x-1">
                                   <p className='h-3 w-2 rounded-md bg-red-500'></p>
                                   <p className='h-5 w-2 rounded-md bg-red-500'></p>

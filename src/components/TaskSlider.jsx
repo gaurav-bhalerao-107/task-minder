@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { fetchAllTasks } from '../store/reducers/taskReducer';
 
 const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
-  const { task_title, task_description, collaborators, status, project, priority } = payload;
+  const { id, task_title, task_description, collaborators, status, project, priority } = payload;
   
   const dispatch = useDispatch();
   
@@ -165,12 +165,21 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
     dispatch(fetchAllTasks());
   }
 
-  const openEditSlider = () => {
-    
-  }
-
   const editTask = () => {
-
+    let tasks = JSON.parse(localStorage.getItem('task-minder'));
+    tasks.map((item) => {
+      if(item.id == id) {
+        item.title  = title;
+        item.description  = description;
+        item.collaborators  = selectedCollaborators;
+        item.status  = selectedTaskStatus;
+        item.project  = selectedProject;
+        item.priority  = selectedPriority;
+      }
+    })
+    localStorage.setItem('task-minder', JSON.stringify(tasks));
+    setOpenTaskSlider(false);
+    dispatch(fetchAllTasks());
   }
   
   if(!openTaskSlider){

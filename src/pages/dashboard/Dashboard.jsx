@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [openTaskSlider, setOpenTaskSlider] = useState(false);
 
   const payload = {
+    "id": null,
     "task_title": "",
     "task_description": "",
     "collaborators": [],
@@ -30,24 +31,24 @@ const Dashboard = () => {
 
   return (
     <>
-      <section id="dashboard" className="relative dashboard max-w-[1500px] mx-auto">
-        <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between mb-9">
-          <div className="text-3xl font-medium pb-5 md:pb-0">Dashboard</div>
-          <div className="action-buttons w-full flex items-center justify-start md:justify-end space-x-7">
+      <section id="dashboard" className="relative dashboard max-w-[2050px] mx-auto">
+        <div className="w-full flex flex-row items-center justify-between mb-9">
+          <div className="text-3xl font-medium pb-0">Dashboard</div>
+          <div className="action-buttons w-full flex items-center justify-end space-x-7">
             {/* undo */}
-            <div className="cursor-pointer">
+            {/* <div className="cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none">
                 <path fillRule="evenodd" clipRule="evenodd" d="M9.53033 5.46967C9.82322 5.76256 9.82322 6.23744 9.53033 6.53033L6.06066 10L9.53033 13.4697C9.82322 13.7626 9.82322 14.2374 9.53033 14.5303C9.23744 14.8232 8.76256 14.8232 8.46967 14.5303L4.46967 10.5303C4.17678 10.2374 4.17678 9.76256 4.46967 9.46967L8.46967 5.46967C8.76256 5.17678 9.23744 5.17678 9.53033 5.46967Z" fill="#3D3D3D"/>
                 <path fillRule="evenodd" clipRule="evenodd" d="M4.25 10C4.25 9.58579 4.58579 9.25 5 9.25H16C17.2598 9.25 18.468 9.75044 19.3588 10.6412C20.2496 11.532 20.75 12.7402 20.75 14C20.75 15.2598 20.2496 16.468 19.3588 17.3588C18.468 18.2496 17.2598 18.75 16 18.75H15C14.5858 18.75 14.25 18.4142 14.25 18C14.25 17.5858 14.5858 17.25 15 17.25H16C16.862 17.25 17.6886 16.9076 18.2981 16.2981C18.9076 15.6886 19.25 14.862 19.25 14C19.25 13.138 18.9076 12.3114 18.2981 11.7019C17.6886 11.0924 16.862 10.75 16 10.75H5C4.58579 10.75 4.25 10.4142 4.25 10Z" fill="#3D3D3D"/>
               </svg>
-            </div>
+            </div> */}
             {/* redo */}
-            <div className="cursor-pointer">
+            {/* <div className="cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none">
                 <path fillRule="evenodd" clipRule="evenodd" d="M14.4697 5.46967C14.7626 5.17678 15.2374 5.17678 15.5303 5.46967L19.5303 9.46967C19.8232 9.76256 19.8232 10.2374 19.5303 10.5303L15.5303 14.5303C15.2374 14.8232 14.7626 14.8232 14.4697 14.5303C14.1768 14.2374 14.1768 13.7626 14.4697 13.4697L17.9393 10L14.4697 6.53033C14.1768 6.23744 14.1768 5.76256 14.4697 5.46967Z" fill="#3D3D3D"/>
                 <path fillRule="evenodd" clipRule="evenodd" d="M4.64124 10.6412C5.53204 9.75044 6.74022 9.25 8 9.25H19C19.4142 9.25 19.75 9.58579 19.75 10C19.75 10.4142 19.4142 10.75 19 10.75H8C7.13805 10.75 6.3114 11.0924 5.7019 11.7019C5.09241 12.3114 4.75 13.138 4.75 14C4.75 14.862 5.09241 15.6886 5.7019 16.2981C6.3114 16.9076 7.13805 17.25 8 17.25H9C9.41421 17.25 9.75 17.5858 9.75 18C9.75 18.4142 9.41421 18.75 9 18.75H8C6.74022 18.75 5.53204 18.2496 4.64124 17.3588C3.75044 16.468 3.25 15.2598 3.25 14C3.25 12.7402 3.75044 11.532 4.64124 10.6412Z" fill="#3D3D3D"/>
               </svg>
-            </div>
+            </div> */}
             {/* profile */}
             <div className="cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none">
@@ -85,8 +86,8 @@ const Dashboard = () => {
         </div>
 
         {/* task columns */}
-        <section id="main-task-columns" className='main-task-columns w-[990x] overflow-x-auto'>
-          <div className="flex justify-between space-x-10">
+        <section id="main-task-columns" className='main-task-columns overflow-x-auto hide_scroll'>
+          <div className="flex justify-start space-x-5">
             {/* todo task list */}
             <TaskColumn 
               style={{
@@ -96,7 +97,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(242, 113, 84, 0.10)'
               }} 
               title="To Do"
-              tasks={tasks.filter((item) => item.status.id == 'todo')}
+              tasks={tasks?.filter((item) => item.status.id == 'todo') || []}
             />
 
             {/* in progress task list */}
@@ -108,7 +109,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(255, 175, 71, 0.10)'
               }} 
               title="In Progress"
-              tasks={tasks.filter((item) => item.status.id == 'in-progress')}
+              tasks={tasks?.filter((item) => item.status.id == 'in-progress') || []}
             />
 
             {/* done task list */}
@@ -120,7 +121,7 @@ const Dashboard = () => {
                 boxShadow: '0px 1px 10px 0px rgba(131, 195, 140, 0.10)'
               }} 
               title="Done"
-              tasks={tasks.filter((item) => item.status.id == 'done')}
+              tasks={tasks?.filter((item) => item.status.id == 'done') || []}
             />
           </div>
         </section>

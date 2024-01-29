@@ -1,13 +1,54 @@
-import React from 'react';
-import "./dashboard.css";
+import React, { useEffect, useRef, useState } from 'react';
+import "./tasks.css"
+import { useLocation } from 'react-router-dom';
+import TaskSlider from '../../components/TaskSlider';
+import TaskColumn from '../../components/TaskColumn';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllTasks } from '../../store/reducers/taskReducer';
 
-const Dashboard = () => {
+const Tasks = () => {
+  const location = useLocation();
+  const { hash, pathname, search } = location;
+  const [openTaskSlider, setOpenTaskSlider] = useState(false);
+
+  const payload = {
+    "id": null,
+    "task_title": "",
+    "task_description": "",
+    "assigned_to": {},
+    "status": {"id": "todo", "label": "To Do"},
+    "project": {},
+    "priority": "low"
+  }
+  
+  const dispatch = useDispatch();
+  
+  const tasks = useSelector((state) => state.tasks.tasks)
+  useEffect(() => {
+    dispatch(fetchAllTasks());
+  }, [])
+  console.log(tasks);
+
   return (
     <>
-      <section id="dashboard" className="relative dashboard max-w-[2050px] mx-auto">
+      <section id="tasks" className="relative tasks max-w-[2050px] mx-auto">
         <div className="w-full flex flex-row items-center justify-between mb-9 max-w-[1474px]">
-          <div className="text-3xl font-medium pb-0">Dashboard</div>
+          <div className="text-3xl font-medium pb-0">Tasks</div>
           <div className="action-buttons w-full flex items-center justify-end space-x-7">
+            {/* undo */}
+            {/* <div className="cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                <path fillRule="evenodd" clipRule="evenodd" d="M9.53033 5.46967C9.82322 5.76256 9.82322 6.23744 9.53033 6.53033L6.06066 10L9.53033 13.4697C9.82322 13.7626 9.82322 14.2374 9.53033 14.5303C9.23744 14.8232 8.76256 14.8232 8.46967 14.5303L4.46967 10.5303C4.17678 10.2374 4.17678 9.76256 4.46967 9.46967L8.46967 5.46967C8.76256 5.17678 9.23744 5.17678 9.53033 5.46967Z" fill="#3D3D3D"/>
+                <path fillRule="evenodd" clipRule="evenodd" d="M4.25 10C4.25 9.58579 4.58579 9.25 5 9.25H16C17.2598 9.25 18.468 9.75044 19.3588 10.6412C20.2496 11.532 20.75 12.7402 20.75 14C20.75 15.2598 20.2496 16.468 19.3588 17.3588C18.468 18.2496 17.2598 18.75 16 18.75H15C14.5858 18.75 14.25 18.4142 14.25 18C14.25 17.5858 14.5858 17.25 15 17.25H16C16.862 17.25 17.6886 16.9076 18.2981 16.2981C18.9076 15.6886 19.25 14.862 19.25 14C19.25 13.138 18.9076 12.3114 18.2981 11.7019C17.6886 11.0924 16.862 10.75 16 10.75H5C4.58579 10.75 4.25 10.4142 4.25 10Z" fill="#3D3D3D"/>
+              </svg>
+            </div> */}
+            {/* redo */}
+            {/* <div className="cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                <path fillRule="evenodd" clipRule="evenodd" d="M14.4697 5.46967C14.7626 5.17678 15.2374 5.17678 15.5303 5.46967L19.5303 9.46967C19.8232 9.76256 19.8232 10.2374 19.5303 10.5303L15.5303 14.5303C15.2374 14.8232 14.7626 14.8232 14.4697 14.5303C14.1768 14.2374 14.1768 13.7626 14.4697 13.4697L17.9393 10L14.4697 6.53033C14.1768 6.23744 14.1768 5.76256 14.4697 5.46967Z" fill="#3D3D3D"/>
+                <path fillRule="evenodd" clipRule="evenodd" d="M4.64124 10.6412C5.53204 9.75044 6.74022 9.25 8 9.25H19C19.4142 9.25 19.75 9.58579 19.75 10C19.75 10.4142 19.4142 10.75 19 10.75H8C7.13805 10.75 6.3114 11.0924 5.7019 11.7019C5.09241 12.3114 4.75 13.138 4.75 14C4.75 14.862 5.09241 15.6886 5.7019 16.2981C6.3114 16.9076 7.13805 17.25 8 17.25H9C9.41421 17.25 9.75 17.5858 9.75 18C9.75 18.4142 9.41421 18.75 9 18.75H8C6.74022 18.75 5.53204 18.2496 4.64124 17.3588C3.75044 16.468 3.25 15.2598 3.25 14C3.25 12.7402 3.75044 11.532 4.64124 10.6412Z" fill="#3D3D3D"/>
+              </svg>
+            </div> */}
             {/* profile */}
             <div className="cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none">
@@ -33,7 +74,7 @@ const Dashboard = () => {
             </div>
             {/* new task */}
             <div className="cursor-pointer">
-              <button type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <button onClick={() => setOpenTaskSlider(true)} type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 New Task 
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" viewBox="0 0 25 24" fill="none">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12.5 4.25C12.9142 4.25 13.25 4.58579 13.25 5V19C13.25 19.4142 12.9142 19.75 12.5 19.75C12.0858 19.75 11.75 19.4142 11.75 19V5C11.75 4.58579 12.0858 4.25 12.5 4.25Z" fill="white"/>
@@ -47,12 +88,50 @@ const Dashboard = () => {
         {/* task columns */}
         <section id="main-task-columns" className='main-task-columns overflow-x-auto hide_scroll'>
           <div className="flex justify-start space-x-5">
-            
+            {/* todo task list */}
+            <TaskColumn 
+              style={{
+                borderRadius: '12px',
+                border: '1px solid var(--Primary-200, #CAD9F6)',
+                background: 'var(--Primary-100, #EEF2FC)',
+                boxShadow: '0px 1px 10px 0px rgba(242, 113, 84, 0.10)'
+              }} 
+              title="To Do"
+              tasks={tasks?.filter((item) => item.status.id == 'todo') || []}
+            />
+
+            {/* in progress task list */}
+            <TaskColumn 
+              style={{
+                borderRadius: '12px',
+                border: '1px solid var(--Warning-200, #FFE4C2)',
+                background: 'var(--Warning-100, #FFF6EB)',
+                boxShadow: '0px 1px 10px 0px rgba(255, 175, 71, 0.10)'
+              }} 
+              title="In Progress"
+              tasks={tasks?.filter((item) => item.status.id == 'in-progress') || []}
+            />
+
+            {/* done task list */}
+            <TaskColumn 
+              style={{
+                borderRadius: '12px',
+                border: '1px solid var(--Error-200, #FAD0C6)',
+                background: 'var(--Error-100, #FDF0EC)',
+                boxShadow: '0px 1px 10px 0px rgba(131, 195, 140, 0.10)'
+              }} 
+              title="Done"
+              tasks={tasks?.filter((item) => item.status.id == 'done') || []}
+            />
           </div>
+        </section>
+
+        <section className='task-slider'>
+          <TaskSlider type="NEW" openTaskSlider={openTaskSlider} setOpenTaskSlider={setOpenTaskSlider} payload={payload} />
         </section>
       </section>
     </>
   )
 }
 
-export default Dashboard;
+export default Tasks;

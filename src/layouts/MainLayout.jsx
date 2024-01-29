@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, Link } from "react-router-dom";
 import Dashboard from '../pages/dashboard/Dashboard';
 import Projects from '../pages/projects/Projects';
+import Tasks from '../pages/tasks/Tasks';
 
 // images
 import logo from "../assets/brand/logo.png";
@@ -66,7 +67,7 @@ const MainLayout = () => {
                         </li>
 
                         <li>
-                          <a href="#" className={`${pathname == '/tasks' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                          <Link to="/tasks" className={`${pathname == '/tasks' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                             <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 3.96967C8.32322 4.26256 8.32322 4.73744 8.03033 5.03033L5.53033 7.53033C5.23744 7.82322 4.76256 7.82322 4.46967 7.53033L2.96967 6.03033C2.67678 5.73744 2.67678 5.26256 2.96967 4.96967C3.26256 4.67678 3.73744 4.67678 4.03033 4.96967L5 5.93934L6.96967 3.96967C7.26256 3.67678 7.73744 3.67678 8.03033 3.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
                               <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 9.96967C8.32322 10.2626 8.32322 10.7374 8.03033 11.0303L5.53033 13.5303C5.23744 13.8232 4.76256 13.8232 4.46967 13.5303L2.96967 12.0303C2.67678 11.7374 2.67678 11.2626 2.96967 10.9697C3.26256 10.6768 3.73744 10.6768 4.03033 10.9697L5 11.9393L6.96967 9.96967C7.26256 9.67678 7.73744 9.67678 8.03033 9.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
@@ -77,7 +78,7 @@ const MainLayout = () => {
                             </svg>
 
                             Tasks
-                          </a>
+                          </Link>
                         </li>
 
                         <li>
@@ -174,7 +175,7 @@ const MainLayout = () => {
                     </li>
 
                     <li>
-                      <a href="#" className={`${pathname == '/tasks' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                      <Link to="/tasks" className={`${pathname == '/tasks' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                         <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 3.96967C8.32322 4.26256 8.32322 4.73744 8.03033 5.03033L5.53033 7.53033C5.23744 7.82322 4.76256 7.82322 4.46967 7.53033L2.96967 6.03033C2.67678 5.73744 2.67678 5.26256 2.96967 4.96967C3.26256 4.67678 3.73744 4.67678 4.03033 4.96967L5 5.93934L6.96967 3.96967C7.26256 3.67678 7.73744 3.67678 8.03033 3.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
                           <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 9.96967C8.32322 10.2626 8.32322 10.7374 8.03033 11.0303L5.53033 13.5303C5.23744 13.8232 4.76256 13.8232 4.46967 13.5303L2.96967 12.0303C2.67678 11.7374 2.67678 11.2626 2.96967 10.9697C3.26256 10.6768 3.73744 10.6768 4.03033 10.9697L5 11.9393L6.96967 9.96967C7.26256 9.67678 7.73744 9.67678 8.03033 9.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
@@ -185,7 +186,7 @@ const MainLayout = () => {
                         </svg>
 
                         Tasks
-                      </a>
+                      </Link>
                     </li>
 
                     <li>
@@ -293,8 +294,10 @@ const MainLayout = () => {
           <main className="relative pt-16 md:pt-28 pb-10">
             <div className="px-5 md:px-16">
               <Routes>
+                <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/tasks" element={<Tasks />} />
               </Routes>
             </div>
           </main>

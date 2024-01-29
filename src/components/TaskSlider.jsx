@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { fetchAllTasks } from '../store/reducers/taskReducer';
 
 const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
-  const { id, task_title, task_description, collaborators, status, project, priority } = payload;
+  const { id, task_title, task_description, assigned_to, status, project, priority } = payload;
   
   const dispatch = useDispatch();
   
@@ -50,10 +50,10 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   // priority
   const [selectedPriority, setSelectedPriority] = useState(priority);
 
-  // selectedCollaborators
-  const [openCollaboratorsDropdown, setOpenCollaboratorsDropdown] = useState(false);
-  const [selectedCollaborators, setSelectedCollaborators] = useState(collaborators);
-  const allcollaborators = [
+  // assigned to
+  const [openAssignedToDropdown, setOpenAssignedToDropdown] = useState(false);
+  const [selectedAssignedUser, setSelectedAssignedUser] = useState(assigned_to);
+  const all_users = [
     {
       "id": "gaurav-bhalerao",
       "name": "Gaurav Bhalerao",
@@ -87,15 +87,9 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   }
 
   // select project and close the dropdown
-  const selectCollaborators = (collaborator) => {
-    let selectedIds = selectedCollaborators.map(({ id }) => id)
-    
-    if(selectedIds.includes(collaborator.id)){
-      let newResult = selectedCollaborators.filter(obj => obj.id !== collaborator.id);
-      setSelectedCollaborators(newResult);
-    } else {
-      setSelectedCollaborators([...selectedCollaborators, collaborator])
-    }
+  const selectAssignedUser = (assigned_to) => {
+    setSelectedAssignedUser(assigned_to);
+    setOpenAssignedToDropdown(false);
   }
 
   const getTaskStatusIcon = (status) => {
@@ -152,7 +146,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
       "id": id,
       "title": title,
       "description": description,
-      "collaborators": selectedCollaborators,
+      "assigned_to": selectedAssignedUser,
       "status": selectedTaskStatus,
       "project": selectedProject,
       "priority": selectedPriority
@@ -171,7 +165,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
       if(item.id == id) {
         item.title  = title;
         item.description  = description;
-        item.collaborators  = selectedCollaborators;
+        item.assigned_to  = selectedAssignedUser;
         item.status  = selectedTaskStatus;
         item.project  = selectedProject;
         item.priority  = selectedPriority;
@@ -236,56 +230,41 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                           </div>
                           {/* assigned to */}
                           <div className="">
-                            <h3 className="text-sm font-medium leading-6 text-gray-900">Team Members</h3>
+                            <h3 className="text-sm font-medium leading-6 text-gray-900">Assigned To</h3>
                             <div className="mt-2">
-                              <div className="relative flex items-center space-x-2">
-                                {
-                                  selectedCollaborators?.slice(0,3).map((item, index) => {
-                                    return (
-                                      <a key={index} href="#" className="relative rounded-full hover:opacity-75">
-                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.name.slice(0,1) }</span>
-                                      </a>
-                                    )
-                                  })
-                                }
-                                {
-                                  selectedCollaborators.length > 3 &&
-                                  <a href="#" className="relative rounded-full hover:opacity-75">
-                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ selectedCollaborators.length - 3 + '+' }</span>
-                                  </a>
-                                }
-                                <button onClick={() => setOpenCollaboratorsDropdown(!openCollaboratorsDropdown)} type="button" className="relative inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gray-200 bg-white text-gray-400 hover:border-gray-300 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-                                  {/* <span className="absolute -inset-2"></span> */}
-                                  <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                  </svg>
-                                </button>
-                                {
-                                  openCollaboratorsDropdown &&
-                                  <ul className={`absolute z-10 top-[35px] max-w-[385px] w-full max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ${openCollaboratorsDropdown ? '' : 'transition ease-in duration-100 opacity-0'}`} tabIndex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
-                                    {
-                                      allcollaborators.map((item, index) => {
-                                        return(
-                                          <li onClick={() => selectCollaborators(item)} className="cursor-pointer text-gray-900 relative select-none py-2 pl-3 pr-9" key={`listbox-option-${index}`} id={`listbox-option-${index}`} role="option">
-                                            <div className="flex items-center">
-                                              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.name.slice(0,1) }</span>
-                                              <span className={`${selectedCollaborators.map(({ id }) => id).includes(item.id) ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item.name}</span>
-                                            </div>
-                                            {
-                                              selectedCollaborators.map(({ id }) => id).includes(item.id) &&
-                                              <span className="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                                                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                  <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
-                                                </svg>
-                                              </span>
-                                            }
-                                          </li>
-                                        )
-                                      })
-                                    }
-                                  </ul>
-                                }
-                              </div>
+                            <div className="relative mt-2">
+                              <input id="combobox" placeholder="Assign To" value={selectedAssignedUser.name} onClick={() => setOpenAssignedToDropdown(!openAssignedToDropdown)} type="text" className="cursor-pointer w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" role="combobox" aria-controls="options" aria-expanded="false" />
+                              <button onClick={() => setOpenAssignedToDropdown(!openAssignedToDropdown)} type="button" className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+                                <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
+                                </svg>
+                              </button>
+                              {
+                                openAssignedToDropdown &&
+                                <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" id="options" role="listbox">
+                                  {
+                                    all_users.map((item) => {
+                                      return (
+                                        <li onClick={() => selectAssignedUser(item)} key={item.id} className={`relative cursor-pointer select-none py-2 pl-3 pr-9 ${selectedAssignedUser.id == item.id ? 'text-white bg-indigo-600' : 'text-gray-900 hover:text-white hover:bg-indigo-600'}`} id="option-0" role="option" tabIndex="-1">
+                                          <div className="flex items-center">
+                                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
+                                            <span className={`ml-3 truncate ${selectedAssignedUser.id == item.id ? 'font-semibold' : ''}`}>{ item.name }</span>
+                                          </div>
+                                          {
+                                            selectedAssignedUser.id == item.id &&
+                                            <span className={`absolute inset-y-0 right-0 flex items-center pr-4 ${selectedAssignedUser.id == item.id ? 'text-white' : 'text-indigo-600'}`}>
+                                              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                                              </svg>
+                                            </span>
+                                          }
+                                        </li>
+                                      )
+                                    })
+                                  }
+                                </ul>
+                              }
+                            </div>
                             </div>
                           </div>
                           {/* task status */}

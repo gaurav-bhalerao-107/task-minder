@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { fetchAllTasks } from "../store/reducers/taskReducer";
 
 const TaskCard = ({ task }) => {
-  const { id, title, description, collaborators, status, project, priority } = task;
+  const { id, title, description, assigned_to, status, project, priority } = task;
   const dispatch = useDispatch();
   const [openTaskSlider, setOpenTaskSlider] = useState(false);
   const [openTaskDeleteDialog, setOpenTaskDeleteDialog] = useState(false);
@@ -12,7 +12,7 @@ const TaskCard = ({ task }) => {
     "id": id,
     "task_title": title,
     "task_description": description,
-    "collaborators": collaborators,
+    "assigned_to": assigned_to,
     "status": status,
     "project": project,
     "priority": priority,
@@ -77,18 +77,9 @@ const TaskCard = ({ task }) => {
             <div className="pt-3 border-t-2 flex items-center w-full px-1">
               <div className="flex items-center w-full space-x-1">
                 {
-                  collaborators?.slice(0,3).map((item, index) => {
-                    return (
-                      <a key={index} href="#" className="relative rounded-full hover:opacity-75 -mt-2">
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.670rem] font-medium text-white">{ item.name.slice(0,1) }</span>
-                      </a>
-                    )
-                  })
-                }
-                {
-                  collaborators.length > 3 &&
-                  <a href="#" className="relative rounded-full hover:opacity-75">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.670rem] font-medium text-white">{ selectedCollaborators.length - 3 + '+' }</span>
+                  <a href="#" className="relative rounded-full hover:opacity-75 -mt-2 flex items-center space-x-2">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.670rem] font-medium text-white">{ assigned_to.name.slice(0,1) }</span>
+                    {/* <span className="text-sm">{assigned_to.name}</span> */}
                   </a>
                 }
               </div>

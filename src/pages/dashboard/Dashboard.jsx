@@ -15,7 +15,7 @@ const Dashboard = () => {
     "id": null,
     "task_title": "",
     "task_description": "",
-    "collaborators": [],
+    "assigned_to": {},
     "status": {"id": "todo", "label": "To Do"},
     "project": {},
     "priority": "low"
@@ -32,7 +32,7 @@ const Dashboard = () => {
   return (
     <>
       <section id="dashboard" className="relative dashboard max-w-[2050px] mx-auto">
-        <div className="w-full flex flex-row items-center justify-between mb-9">
+        <div className="w-full flex flex-row items-center justify-between mb-9 max-w-[1474px]">
           <div className="text-3xl font-medium pb-0">Dashboard</div>
           <div className="action-buttons w-full flex items-center justify-end space-x-7">
             {/* undo */}

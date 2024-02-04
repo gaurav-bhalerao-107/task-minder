@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { fetchAllTasks } from '../store/reducers/taskReducer';
+import { fetchAllProjects } from '../store/reducers/taskReducer';
 
 const ProjectSlider = ({ type, openProjectSlider, setOpenProjectSlider, payload }) => {
   const { id, project_title, project_description, collaborators } = payload;
@@ -76,21 +76,21 @@ const ProjectSlider = ({ type, openProjectSlider, setOpenProjectSlider, payload 
     let result = items ? [...items, payload] : [payload]
     localStorage.setItem('task-minder-projects', JSON.stringify(result));
     setOpenProjectSlider(false);
-    dispatch(fetchAllTasks());
+    dispatch(fetchAllProjects());
   }
 
   const editProject = () => {
-    let tasks = JSON.parse(localStorage.getItem('task-minder-projects'));
-    tasks.map((item) => {
+    let projects = JSON.parse(localStorage.getItem('task-minder-projects'));
+    projects.map((item) => {
       if(item.id == id) {
         item.title  = title;
         item.description  = description;
         item.collaborators  = selectedCollaborators;
       }
     })
-    localStorage.setItem('task-minder-projects', JSON.stringify(tasks));
+    localStorage.setItem('task-minder-projects', JSON.stringify(projects));
     setOpenProjectSlider(false);
-    dispatch(fetchAllTasks());
+    dispatch(fetchAllProjects());
   }
   
   if(!openProjectSlider){
@@ -124,7 +124,7 @@ const ProjectSlider = ({ type, openProjectSlider, setOpenProjectSlider, payload 
                         </div>
                       </div>
                       <div className="mt-1">
-                        <p className="text-sm text-indigo-300">Get started by filling in the information below to create your new task.</p>
+                        <p className="text-sm text-indigo-300">Get started by filling in the information below to create your new project.</p>
                       </div>
                     </div>
                     <div className="flex flex-1 flex-col justify-between">
@@ -132,9 +132,9 @@ const ProjectSlider = ({ type, openProjectSlider, setOpenProjectSlider, payload 
                         <div className="space-y-6 pb-5 pt-6">
                           {/* title */}
                           <div className="">
-                            <label htmlFor="task-name" className="block text-sm font-medium leading-6 text-gray-900">Task</label>
+                            <label htmlFor="project-name" className="block text-sm font-medium leading-6 text-gray-900">Project Name</label>
                             <div className="mt-2">
-                              <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" name="task-name" id="task-name" placeholder="Task Name" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                              <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" name="project-name" id="project-name" placeholder="Project Name" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                             </div>
                           </div>
                           {/* description */}

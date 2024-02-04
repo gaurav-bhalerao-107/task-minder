@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProjectSlider from '../../components/ProjectSlider';
+import ProjectCard from '../../components/ProjectCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllProjects } from '../../store/reducers/taskReducer';
 
 const Projects = () => {
   const [openProjectSlider, setOpenProjectSlider] = useState(false);
@@ -11,8 +14,16 @@ const Projects = () => {
     "collaborators": []
   }
 
+  const dispatch = useDispatch();
+
+  const projects = useSelector((state) => state.tasks.projects)
+  useEffect(() => {
+    dispatch(fetchAllProjects());
+  }, [])
+  console.log(projects);
+
   return (
-    <section id="projects" className="relative projects max-w-[2050px] mx-auto">
+    <section id="projects" className="relative projects mx-auto">
       <div className="w-full flex flex-row items-center justify-between mb-9 max-w-[1474px]">
         <div className="text-3xl font-medium pb-0">Projects</div>
         <div className="action-buttons w-full flex items-center justify-end space-x-7">
@@ -42,7 +53,7 @@ const Projects = () => {
           {/* new project */}
           <div className="cursor-pointer">
             <button onClick={() => setOpenProjectSlider(true)} type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              New Project
+              Start New Project
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" viewBox="0 0 25 24" fill="none">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12.5 4.25C12.9142 4.25 13.25 4.58579 13.25 5V19C13.25 19.4142 12.9142 19.75 12.5 19.75C12.0858 19.75 11.75 19.4142 11.75 19V5C11.75 4.58579 12.0858 4.25 12.5 4.25Z" fill="white"/>
                 <path fillRule="evenodd" clipRule="evenodd" d="M4.75 12C4.75 11.5858 5.08579 11.25 5.5 11.25H19.5C19.9142 11.25 20.25 11.5858 20.25 12C20.25 12.4142 19.9142 12.75 19.5 12.75H5.5C5.08579 12.75 4.75 12.4142 4.75 12Z" fill="white"/>
@@ -53,13 +64,21 @@ const Projects = () => {
       </div>
 
       {/* project columns */}
-      <section id="main-task-columns" className='main-task-columns overflow-x-auto hide_scroll'>
-        <div className="flex justify-start space-x-5">
-          
+      <section id="main-project-columns" className='main-project-columns'>
+        <div className="grid grid-cols-12 gap-3">
+          {
+            projects?.map((project) => {
+              return (
+                <div key={project.id} className="h-full col-span-6 xl:col-span-4">
+                  <ProjectCard project={project} />
+                </div>
+              )
+            })
+          }
         </div>
       </section>
 
-      <section className='task-slider'>
+      <section className='project-slider'>
         <ProjectSlider type="NEW" openProjectSlider={openProjectSlider} setOpenProjectSlider={setOpenProjectSlider} payload={payload} />
       </section>
     </section>

@@ -3,14 +3,23 @@ import { Route, Routes, useLocation, Link } from "react-router-dom";
 import Dashboard from '../pages/dashboard/Dashboard';
 import Projects from '../pages/projects/Projects';
 import Tasks from '../pages/tasks/Tasks';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllProjects } from '../store/reducers/taskReducer';
 
 // images
 import logo from "../assets/brand/logo.png";
+import ProjectTasks from '../pages/tasks/ProjectTasks';
 
 const MainLayout = () => {
   const location = useLocation();
   const { hash, pathname, search } = location;
   const [openSidebar, setopenSidebar] = useState(true);
+  const dispatch = useDispatch();
+
+  const projects = useSelector((state) => state.tasks.projects || [])
+  useEffect(() => {
+    dispatch(fetchAllProjects());
+  }, [])
   
 
   return (<>
@@ -99,26 +108,18 @@ const MainLayout = () => {
                     <li>
                       <div className="text-xs font-semibold leading-6">Your Projects</div>
                       <ul role="list" className="-mx-2 mt-2 space-y-3">
-                        <li>
-                          <a href="#" className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">X</span>
-                            <span className="truncate">Xsonic Media</span>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#" className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">E</span>
-                            <span className="truncate">Expenzee</span>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#" className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">S</span>
-                            <span className="truncate">Sunroof Energy</span>
-                          </a>
-                        </li>
+                        {
+                          projects.map((project) => {
+                            return (
+                              <li key={project.id}>
+                                <Link to={ 'tasks/' + project.id } className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
+                                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ project.title.slice(0,1) }</span>
+                                  <span className="truncate">{ project.title }</span>
+                                </Link>
+                              </li>
+                            )
+                          })
+                        }
                       </ul>
                     </li>
                     <li className="mt-auto">
@@ -207,26 +208,18 @@ const MainLayout = () => {
                 <li>
                   <div className="text-xs font-semibold leading-6">Your Projects</div>
                   <ul role="list" className="-mx-2 mt-2 space-y-3">
-                    <li>
-                      <a href="#" className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">X</span>
-                        <span className="truncate">Xsonic Media</span>
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">E</span>
-                        <span className="truncate">Expenzee</span>
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">S</span>
-                        <span className="truncate">Sunroof Energy</span>
-                      </a>
-                    </li>
+                    {
+                      projects.map((project) => {
+                        return (
+                          <li key={project.id}>
+                            <Link to={ 'tasks/' + project.id } className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
+                              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{project.title.slice(0,1)}</span>
+                              <span className="truncate">{ project.title }</span>
+                            </Link>
+                          </li>
+                        )
+                      })
+                    }
                   </ul>
                 </li>
                 <li className="mt-auto">
@@ -298,6 +291,7 @@ const MainLayout = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/tasks" element={<Tasks />} />
+                <Route path="/tasks/:project_id" element={<ProjectTasks />} />
               </Routes>
             </div>
           </main>

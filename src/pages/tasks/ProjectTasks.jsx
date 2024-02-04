@@ -1,25 +1,41 @@
-import React, { useEffect } from 'react';
-import "./dashboard.css";
-import TodoImage from "../../assets/dashboard/todo.png";
-import InProgress from "../../assets/dashboard/in_progress.png";
-import InReview from "../../assets/dashboard/in_review.png";
-import DoneImage from "../../assets/dashboard/done.png";
+import React, { useEffect, useRef, useState } from 'react';
+import "./tasks.css"
+import { useLocation, useParams } from 'react-router-dom';
+import TaskSlider from '../../components/TaskSlider';
+import TaskColumn from '../../components/TaskColumn';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllTasks } from '../../store/reducers/taskReducer';
+import { fetchProjectTasks } from '../../store/reducers/taskReducer';
 
-const Dashboard = () => {
+const ProjectTasks = () => {
+  const location = useLocation();
+  const { hash, pathname, search } = location;
+  const { project_id } = useParams();
+
+  const [openTaskSlider, setOpenTaskSlider] = useState(false);
+
   const dispatch = useDispatch();
   
-  const tasks = useSelector((state) => state.tasks.tasks)
+  const project_tasks = useSelector((state) => state.tasks.projectTasks)
   useEffect(() => {
-    dispatch(fetchAllTasks());
+    dispatch(fetchProjectTasks({ "id": project_id }));
   }, [])
+  console.log("project_tasks... ", project_tasks);
+
+  const payload = {
+    "id": null,
+    "task_title": "",
+    "task_description": "",
+    "assigned_to": {},
+    "status": {"id": "todo", "label": "To Do"},
+    "project": project_tasks.project,
+    "priority": "low"
+  }
 
   return (
     <>
-      <section id="dashboard" className="relative dashboard max-w-[2050px] mx-auto">
+      <section id="tasks" className="relative tasks max-w-[2050px] mx-auto">
         <div className="w-full flex flex-row items-center justify-between mb-9 max-w-[1474px]">
-          <div className="text-3xl font-medium pb-0">Dashboard</div>
+          <div className="text-3xl font-medium pb-0 whitespace-nowrap"> <span className='opacity-50'>{ project_tasks.project.title }</span> Tasks</div>
           <div className="action-buttons w-full flex items-center justify-end space-x-7">
             {/* profile */}
             <div className="cursor-pointer">
@@ -46,7 +62,7 @@ const Dashboard = () => {
             </div>
             {/* new task */}
             <div className="cursor-pointer">
-              <button type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <button onClick={() => setOpenTaskSlider(true)} type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Create New Task
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" viewBox="0 0 25 24" fill="none">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12.5 4.25C12.9142 4.25 13.25 4.58579 13.25 5V19C13.25 19.4142 12.9142 19.75 12.5 19.75C12.0858 19.75 11.75 19.4142 11.75 19V5C11.75 4.58579 12.0858 4.25 12.5 4.25Z" fill="white"/>
@@ -60,26 +76,50 @@ const Dashboard = () => {
         {/* task columns */}
         <section id="main-task-columns" className='main-task-columns overflow-x-auto hide_scroll'>
           <div className="flex justify-start space-x-5">
-            <div className="relative w-[200px]">
-              <img src={TodoImage} className='h-full w-full' alt="" />
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -ml-1 text-5xl font-bold text-white">{ tasks?.filter((item) => { return item.status.id == 'todo' })?.length || 0 }</div>
-              <div className="absolute bottom-[10px] left-[10px] text-white font-semibold">To Do</div>
-            </div>
-            <div className="relative w-[200px]">
-              <img src={InProgress} className='h-full w-full' alt="" />
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -ml-1 text-5xl font-bold text-white">{ tasks?.filter((item) => { return item.status.id == 'in-progress' })?.length || 0 }</div>
-              <div className="absolute bottom-[10px] left-[10px] text-white font-semibold">In Progress</div>
-            </div>
-            <div className="relative w-[200px]">
-              <img src={DoneImage} className='h-full w-full' alt="" />
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -ml-1 text-5xl font-bold text-white">{ tasks?.filter((item) => { return item.status.id == 'done' })?.length || 0 }</div>
-              <div className="absolute bottom-[10px] left-[10px] text-white font-semibold">Done</div>
-            </div>
+            {/* todo task list */}
+            <TaskColumn 
+              style={{
+                borderRadius: '12px',
+                border: '1px solid var(--Primary-200, #CAD9F6)',
+                background: 'var(--Primary-100, #EEF2FC)',
+                boxShadow: '0px 1px 10px 0px rgba(242, 113, 84, 0.10)'
+              }} 
+              title="To Do"
+              tasks={project_tasks.tasks?.filter((item) => item.status.id == 'todo') || []}
+            />
+
+            {/* in progress task list */}
+            <TaskColumn 
+              style={{
+                borderRadius: '12px',
+                border: '1px solid var(--Warning-200, #FFE4C2)',
+                background: 'var(--Warning-100, #FFF6EB)',
+                boxShadow: '0px 1px 10px 0px rgba(255, 175, 71, 0.10)'
+              }} 
+              title="In Progress"
+              tasks={project_tasks.tasks?.filter((item) => item.status.id == 'in-progress') || []}
+            />
+
+            {/* done task list */}
+            <TaskColumn 
+              style={{
+                borderRadius: '12px',
+                border: '1px solid var(--Error-200, #FAD0C6)',
+                background: 'var(--Error-100, #FDF0EC)',
+                boxShadow: '0px 1px 10px 0px rgba(131, 195, 140, 0.10)'
+              }} 
+              title="Done"
+              tasks={project_tasks.tasks?.filter((item) => item.status.id == 'done') || []}
+            />
           </div>
+        </section>
+
+        <section className='task-slider'>
+          <TaskSlider type="NEW" openTaskSlider={openTaskSlider} setOpenTaskSlider={setOpenTaskSlider} payload={payload} />
         </section>
       </section>
     </>
   )
 }
 
-export default Dashboard;
+export default ProjectTasks;

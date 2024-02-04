@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { fetchAllTasks } from '../store/reducers/taskReducer';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllProjects, fetchAllTasks, fetchProjectTasks } from '../store/reducers/taskReducer';
+import { useParams } from 'react-router-dom';
 
 const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   const { id, task_title, task_description, assigned_to, status, project, priority } = payload;
   
+  const { project_id } = useParams();
+
   const dispatch = useDispatch();
   
   // title & description
@@ -32,20 +35,6 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   // projects
   const [openProjectDropdown, setOpenProjectDropdown] = useState(false);
   const [selectedProject, setSelectedProject] = useState(project);
-  const projectsList = [
-    {
-      "id": "xsonic-media",
-      "label": "Xsonic Media"
-    },
-    {
-      "id": "expenzee",
-      "label": "Expenzee"
-    },
-    {
-      "id": "sunroof-energy",
-      "label": "Sunroof Energy"
-    }
-  ];
 
   // priority
   const [selectedPriority, setSelectedPriority] = useState(priority);
@@ -73,6 +62,13 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
       "image": "",
     },
   ];
+
+  // fetching all projects 
+  const projects = useSelector((state) => state.tasks.projects)
+  useEffect(() => {
+    dispatch(fetchAllProjects());
+  }, [])
+  const projectsList = projects
   
   // select task status and close the dropdown
   const selectTaskStatus = (status) => {
@@ -156,7 +152,11 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
     let result = items ? [...items, payload] : [payload]
     localStorage.setItem('task-minder', JSON.stringify(result));
     setOpenTaskSlider(false);
-    dispatch(fetchAllTasks());
+    if(project_id) {
+      dispatch(fetchProjectTasks({ "id": project_id }));
+    } else {
+      dispatch(fetchAllTasks());
+    }
   }
 
   const editTask = () => {
@@ -173,7 +173,11 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
     })
     localStorage.setItem('task-minder', JSON.stringify(tasks));
     setOpenTaskSlider(false);
-    dispatch(fetchAllTasks());
+    if(project_id) {
+      dispatch(fetchProjectTasks({ "id": project_id }));
+    } else {
+      dispatch(fetchAllTasks());
+    }
   }
   
   if(!openTaskSlider){
@@ -319,8 +323,8 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                               <div className="relative mt-2">
                                 <button onClick={() => setOpenProjectDropdown(!openProjectDropdown)} type="button" className="cursor-pointer relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                                   <span className="flex items-center">
-                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ selectedProject?.label?.slice(0,1) || "" }</span>
-                                    <span className="ml-3 block truncate">{selectedProject.label}</span>
+                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ selectedProject?.title?.slice(0,1) || "" }</span>
+                                    <span className="ml-3 block truncate">{selectedProject.title}</span>
                                   </span>
                                   <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                                     <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -336,9 +340,9 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                                         return(
                                           <li onClick={() => selectProject(item)} className="cursor-pointer text-gray-900 relative select-none py-2 pl-3 pr-9" key={`listbox-option-${index}`} id={`listbox-option-${index}`} role="option">
                                             <div className="flex items-center">
-                                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.label.slice(0,1) }</span>
+                                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ item.title.slice(0,1) }</span>
                                                 {/* <!-- Selected: "font-semibold", Not Selected: "font-normal" --> */}
-                                                <span className={`${selectedProject.id == item.id ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item.label}</span>
+                                                <span className={`${selectedProject.id == item.id ? 'font-semibold' : 'font-normal'} ml-3 block truncate`}>{item.title}</span>
                                             </div>
                                             {
                                               selectedProject.id == item.id &&

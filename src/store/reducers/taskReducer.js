@@ -14,7 +14,7 @@ export const taskSlice = createSlice({
   initialState,
   reducers: {
     fetchAllTasks: (state) => {
-      state.tasks = JSON.parse(localStorage.getItem('task-minder'));
+      state.tasks = JSON.parse(localStorage.getItem('task-minder'))?.sort((a, b) => a.sort - b.sort);
       console.log("state.tasks... ", state.tasks);
     },
 

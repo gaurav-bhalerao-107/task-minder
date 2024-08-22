@@ -20,7 +20,6 @@ const Projects = () => {
   useEffect(() => {
     dispatch(fetchAllProjects());
   }, [])
-  console.log(projects);
 
   return (
     <section id="projects" className="relative projects mx-auto">

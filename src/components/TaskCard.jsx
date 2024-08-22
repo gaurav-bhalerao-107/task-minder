@@ -4,8 +4,9 @@ import { useDispatch } from "react-redux";
 import { fetchAllTasks } from "../store/reducers/taskReducer";
 import { Link } from "react-router-dom";
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, index, onDragStart, onDrop, onDragOver, updatedColumn }) => {
   const { id, title, description, assigned_to, status, project, priority } = task;
+
   const dispatch = useDispatch();
   const [openTaskSlider, setOpenTaskSlider] = useState(false);
   const [openTaskDeleteDialog, setOpenTaskDeleteDialog] = useState(false);
@@ -31,8 +32,8 @@ const TaskCard = ({ task }) => {
 
   return (
     <>
-      <section id="task-card" className="task-card pb-3 w-[450px]">
-        <div className="relative py-3 px-3 rounded-[8px] bg-white" draggable="true">
+      <section draggable onDragStart={(event) => onDragStart(event, id, status.id, index)} onDrop={(event) => onDrop(event, updatedColumn, index)} onDragOver={onDragOver} id="task-card" className="task-card mb-3 w-[351px] cursor-grab">
+        <div className="relative py-3 px-3 rounded-[8px] bg-white">
           <div className="">
             <div className="flex items-center justify-between">
               <div className="">
@@ -77,14 +78,13 @@ const TaskCard = ({ task }) => {
               </div>
             </div>
             {/* <div className="border-2 border-gray-100 h-[1px] mt-3"></div> */}
-            <div className="pt-3 border-t-2 flex items-center w-full px-1">
+            <div className="pt-3 border-t flex items-center w-full px-1">
               <div className="flex items-center w-full space-x-1">
-                {
+                {/* {
                   <a href="#" className="relative rounded-full hover:opacity-75 -mt-2 flex items-center space-x-2">
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.670rem] font-medium text-white">{ assigned_to.name.slice(0,1) }</span>
-                    {/* <span className="text-sm">{assigned_to.name}</span> */}
                   </a>
-                }
+                } */}
               </div>
               <div className="flex items-center text-md ring-2 pl-3 pr-2 py-1 rounded-[5px] cursor-pointer">
                 <button type="button" className={`rounded text-sm shadow-sm mr-2`}>
@@ -130,9 +130,9 @@ const TaskCard = ({ task }) => {
                     </svg>
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <h3 className="text-base font-semibold leading-6 text-gray-900" id="modal-title">Deactivate account</h3>
+                    <h3 className="text-base font-semibold leading-6 text-gray-900" id="modal-title">Are You Sure You Want to Delete This Task?</h3>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">Are you sure you want to deactivate your account? All of your data will be permanently removed from our servers forever. This action cannot be undone.</p>
+                      <p className="text-sm text-gray-500">Do you want to proceed with the deletion? Click “Delete” to confirm or “Cancel” to keep everything as is.</p>
                     </div>
                   </div>
                 </div>

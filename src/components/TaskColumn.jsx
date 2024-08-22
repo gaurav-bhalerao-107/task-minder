@@ -1,9 +1,62 @@
-import React from 'react'
+import { React, Fragment, useState } from 'react'
 import TaskCard from './TaskCard'
+import DropArea from './DropArea'
+import { taskStatus } from '../constant/projects'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllTasks } from '../store/reducers/taskReducer';
 
-const TaskColumns = ({style, title, tasks}) => {
+const TaskColumns = ({style, title, column, tasks, setActiveCard, activeCard}) => {
+  const dispatch = useDispatch();
+
+  const [showDrop, setShowDrop] = useState(false)
+
+  const onDrop = (event, updatedColumn, updatedIndex) => {
+    event.stopPropagation();
+    const task_id = event.dataTransfer.getData("task_id");
+    const currentIndex = event.dataTransfer.getData("current_index");
+    const currentColumn = event.dataTransfer.getData("current_column");
+    
+    if(currentColumn == updatedColumn) return;
+    
+    
+    editTaskStatus(currentColumn, currentIndex, updatedColumn, updatedIndex, task_id);
+    
+    setShowDrop(false);
+  }
+
+  const onDragOver = (event) => {
+    event.preventDefault();
+  }
+
+  const onDragStart = (event, id, column, index) => {
+    event.dataTransfer.setData("task_id", id);
+    event.dataTransfer.setData("current_index", index);
+    event.dataTransfer.setData("current_column", column);
+    
+    setShowDrop(false);
+  }
+
+  const editTaskStatus = (currentColumn, currentIndex, updatedColumn, updatedIndex, id) => {
+    console.log("currentColumn...", currentColumn);
+    console.log("currentIndex...", currentIndex);
+    console.log("updatedColumn...", updatedColumn);
+    console.log("updatedIndex...", updatedIndex);
+    
+    const status = taskStatus.find(item => item.id === updatedColumn);
+    
+    let tasks = JSON.parse(localStorage.getItem('task-minder'));
+    tasks.map((item) => {
+      if(item.id == id) {
+        item.status  = status;
+        item.sort = updatedIndex == null ? 0 : updatedIndex + 1;
+      }
+    })
+    localStorage.setItem('task-minder', JSON.stringify(tasks));
+    dispatch(fetchAllTasks());
+  }
+
   return (<>
-    <div className="max-w-[478px] w-[478px]">
+    <div className="max-w-[378px] w-[378px]">
       <div className="">
         <div 
           className="px-3"
@@ -40,19 +93,21 @@ const TaskColumns = ({style, title, tasks}) => {
               <p className='text-xl font-medium ml-2'>{title}</p>
             </div>
           </div>
-          <div className="flex flex-col overflow-auto hide_scroll max-h-[800px]">
+          <div className="flex flex-col overflow-auto hide_scroll max-h-[800px]" onDrop={(event) => onDrop(event, column)} onDragOver={onDragOver}>
             {
               tasks.length > 0 ?
               tasks.map((item, index) => {
                 return (
-                  <div className="" key={index}>
-                    <TaskCard task={item} />
-                  </div>
+                  <Fragment>
+                    <DropArea showDrop={showDrop} />
+                      <TaskCard task={item} index={index} onDragStart={onDragStart} onDrop={onDrop} onDragOver={onDragOver} updatedColumn={column} />
+                    <DropArea showDrop={showDrop} />
+                  </Fragment>
                 )
               })
               :
               <div className="pb-7">
-                <div className="text-center w-[450px]">
+                <div className="text-center w-[351px]">
                   <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                   </svg>

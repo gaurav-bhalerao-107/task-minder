@@ -20,14 +20,13 @@ const Tasks = () => {
   const tasks = useSelector((state) => state.tasks.tasks)
   const projects = useSelector((state) => state.tasks.projects)
 
-  console.log("projects[0]...", projects[0]);
   const payload = {
     "id": null,
     "task_title": "",
     "task_description": "",
     "assigned_to": {},
     "status": taskStatus[0],
-    "project": projects.length > 0 ? projects[0] : {},
+    "project": projects?.length > 0 ? projects[0] : {},
     "priority": "low"
   }
   
@@ -87,7 +86,7 @@ const Tasks = () => {
             </div>
             {/* new task */}
             <div className="cursor-pointer">
-              <button onClick={() => projects.length > 0 ? setOpenTaskSlider(true) : showError()} type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <button onClick={() => projects?.length > 0 ? setOpenTaskSlider(true) : showError()} type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Create New Task
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" viewBox="0 0 25 24" fill="none">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12.5 4.25C12.9142 4.25 13.25 4.58579 13.25 5V19C13.25 19.4142 12.9142 19.75 12.5 19.75C12.0858 19.75 11.75 19.4142 11.75 19V5C11.75 4.58579 12.0858 4.25 12.5 4.25Z" fill="white"/>

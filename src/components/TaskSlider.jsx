@@ -218,7 +218,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
     setDescription("");
     setSelectedTaskStatus(taskStatus[0]);
     setSelectedPriority("low");
-    setSelectedProject(projects.length > 0 ? projects[0] : {});
+    setSelectedProject(projects?.length > 0 ? projects[0] : {});
   }
   
   if(!openTaskSlider){

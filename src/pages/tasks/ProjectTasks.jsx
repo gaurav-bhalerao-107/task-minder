@@ -5,6 +5,7 @@ import TaskSlider from '../../components/TaskSlider';
 import TaskColumn from '../../components/TaskColumn';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProjectTasks } from '../../store/reducers/taskReducer';
+import { taskStatus } from '../../constant/projects';
 
 const ProjectTasks = () => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const ProjectTasks = () => {
     "task_title": "",
     "task_description": "",
     "assigned_to": {},
-    "status": {"id": "todo", "label": "To Do"},
+    "status": taskStatus[0],
     "project": project_tasks.project,
     "priority": "low"
   }

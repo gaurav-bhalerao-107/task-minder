@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Route, Routes, useLocation, Link } from "react-router-dom";
+import { Route, Routes, useLocation, Link, useParams } from "react-router-dom";
 import Dashboard from '../pages/dashboard/Dashboard';
 import Projects from '../pages/projects/Projects';
 import Tasks from '../pages/tasks/Tasks';
@@ -15,6 +15,8 @@ const MainLayout = () => {
   const { hash, pathname, search } = location;
   const [openSidebar, setopenSidebar] = useState(true);
   const dispatch = useDispatch();
+  const { projectId } = useParams();
+  console.log("projectId...", projectId);
 
   const projects = useSelector((state) => state.tasks.projects || [])
   useEffect(() => {
@@ -76,21 +78,21 @@ const MainLayout = () => {
                         </li>
 
                         <li>
-                          <Link to="/tasks" className={`${pathname == '/tasks' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
-                            <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
-                              <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 3.96967C8.32322 4.26256 8.32322 4.73744 8.03033 5.03033L5.53033 7.53033C5.23744 7.82322 4.76256 7.82322 4.46967 7.53033L2.96967 6.03033C2.67678 5.73744 2.67678 5.26256 2.96967 4.96967C3.26256 4.67678 3.73744 4.67678 4.03033 4.96967L5 5.93934L6.96967 3.96967C7.26256 3.67678 7.73744 3.67678 8.03033 3.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                              <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 9.96967C8.32322 10.2626 8.32322 10.7374 8.03033 11.0303L5.53033 13.5303C5.23744 13.8232 4.76256 13.8232 4.46967 13.5303L2.96967 12.0303C2.67678 11.7374 2.67678 11.2626 2.96967 10.9697C3.26256 10.6768 3.73744 10.6768 4.03033 10.9697L5 11.9393L6.96967 9.96967C7.26256 9.67678 7.73744 9.67678 8.03033 9.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                              <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 15.9697C8.32322 16.2626 8.32322 16.7374 8.03033 17.0303L5.53033 19.5303C5.23744 19.8232 4.76256 19.8232 4.46967 19.5303L2.96967 18.0303C2.67678 17.7374 2.67678 17.2626 2.96967 16.9697C3.26256 16.6768 3.73744 16.6768 4.03033 16.9697L5 17.9393L6.96967 15.9697C7.26256 15.6768 7.73744 15.6768 8.03033 15.9697Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                              <path fillRule="evenodd" clipRule="evenodd" d="M10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H20C20.4142 5.25 20.75 5.58579 20.75 6C20.75 6.41421 20.4142 6.75 20 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                              <path fillRule="evenodd" clipRule="evenodd" d="M10.25 12C10.25 11.5858 10.5858 11.25 11 11.25H20C20.4142 11.25 20.75 11.5858 20.75 12C20.75 12.4142 20.4142 12.75 20 12.75H11C10.5858 12.75 10.25 12.4142 10.25 12Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                              <path fillRule="evenodd" clipRule="evenodd" d="M10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H20C20.4142 17.25 20.75 17.5858 20.75 18C20.75 18.4142 20.4142 18.75 20 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
+                          <Link to="/tasks/all" className={`${pathname == '/tasks/all' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                            <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
+                              <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 3.96967C8.32322 4.26256 8.32322 4.73744 8.03033 5.03033L5.53033 7.53033C5.23744 7.82322 4.76256 7.82322 4.46967 7.53033L2.96967 6.03033C2.67678 5.73744 2.67678 5.26256 2.96967 4.96967C3.26256 4.67678 3.73744 4.67678 4.03033 4.96967L5 5.93934L6.96967 3.96967C7.26256 3.67678 7.73744 3.67678 8.03033 3.96967Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                              <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 9.96967C8.32322 10.2626 8.32322 10.7374 8.03033 11.0303L5.53033 13.5303C5.23744 13.8232 4.76256 13.8232 4.46967 13.5303L2.96967 12.0303C2.67678 11.7374 2.67678 11.2626 2.96967 10.9697C3.26256 10.6768 3.73744 10.6768 4.03033 10.9697L5 11.9393L6.96967 9.96967C7.26256 9.67678 7.73744 9.67678 8.03033 9.96967Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                              <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 15.9697C8.32322 16.2626 8.32322 16.7374 8.03033 17.0303L5.53033 19.5303C5.23744 19.8232 4.76256 19.8232 4.46967 19.5303L2.96967 18.0303C2.67678 17.7374 2.67678 17.2626 2.96967 16.9697C3.26256 16.6768 3.73744 16.6768 4.03033 16.9697L5 17.9393L6.96967 15.9697C7.26256 15.6768 7.73744 15.6768 8.03033 15.9697Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                              <path fillRule="evenodd" clipRule="evenodd" d="M10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H20C20.4142 5.25 20.75 5.58579 20.75 6C20.75 6.41421 20.4142 6.75 20 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                              <path fillRule="evenodd" clipRule="evenodd" d="M10.25 12C10.25 11.5858 10.5858 11.25 11 11.25H20C20.4142 11.25 20.75 11.5858 20.75 12C20.75 12.4142 20.4142 12.75 20 12.75H11C10.5858 12.75 10.25 12.4142 10.25 12Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                              <path fillRule="evenodd" clipRule="evenodd" d="M10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H20C20.4142 17.25 20.75 17.5858 20.75 18C20.75 18.4142 20.4142 18.75 20 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
                             </svg>
 
                             Tasks
                           </Link>
                         </li>
 
-                        <li>
+                        {/* <li>
                           <a href="#" className={`${pathname == '/calendar' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                             <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/calendar'? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" clipRule="evenodd" d="M6 5.75C5.66848 5.75 5.35054 5.8817 5.11612 6.11612C4.8817 6.35054 4.75 6.66848 4.75 7V19C4.75 19.3315 4.8817 19.6495 5.11612 19.8839C5.35054 20.1183 5.66848 20.25 6 20.25H11.5C11.9142 20.25 12.25 20.5858 12.25 21C12.25 21.4142 11.9142 21.75 11.5 21.75H6C5.27065 21.75 4.57118 21.4603 4.05546 20.9445C3.53973 20.4288 3.25 19.7293 3.25 19V7C3.25 6.27065 3.53973 5.57118 4.05546 5.05546C4.57118 4.53973 5.27065 4.25 6 4.25H18C18.7293 4.25 19.4288 4.53973 19.9445 5.05546C20.4603 5.57118 20.75 6.27065 20.75 7V13C20.75 13.4142 20.4142 13.75 20 13.75C19.5858 13.75 19.25 13.4142 19.25 13V7C19.25 6.66848 19.1183 6.35054 18.8839 6.11612C18.6495 5.8817 18.3315 5.75 18 5.75H6Z" fill={pathname == '/calendar' ? '#EEF2FC' : '#14367B' } />
@@ -102,7 +104,7 @@ const MainLayout = () => {
 
                             Calendar
                           </a>
-                        </li>
+                        </li> */}
                       </ul>
                     </li>
                     <li>
@@ -112,7 +114,7 @@ const MainLayout = () => {
                           projects.map((project) => {
                             return (
                               <li key={project.id}>
-                                <Link to={ 'tasks/' + project.id } className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
+                                <Link to={ 'tasks/' + project.id } className={`text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm ${projectId == project.id ? 'font-bold' : ''}`}>
                                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{ project.title.slice(0,1) }</span>
                                   <span className="truncate">{ project.title }</span>
                                 </Link>
@@ -176,21 +178,21 @@ const MainLayout = () => {
                     </li>
 
                     <li>
-                      <Link to="/tasks" className={`${pathname == '/tasks' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
-                        <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
-                          <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 3.96967C8.32322 4.26256 8.32322 4.73744 8.03033 5.03033L5.53033 7.53033C5.23744 7.82322 4.76256 7.82322 4.46967 7.53033L2.96967 6.03033C2.67678 5.73744 2.67678 5.26256 2.96967 4.96967C3.26256 4.67678 3.73744 4.67678 4.03033 4.96967L5 5.93934L6.96967 3.96967C7.26256 3.67678 7.73744 3.67678 8.03033 3.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                          <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 9.96967C8.32322 10.2626 8.32322 10.7374 8.03033 11.0303L5.53033 13.5303C5.23744 13.8232 4.76256 13.8232 4.46967 13.5303L2.96967 12.0303C2.67678 11.7374 2.67678 11.2626 2.96967 10.9697C3.26256 10.6768 3.73744 10.6768 4.03033 10.9697L5 11.9393L6.96967 9.96967C7.26256 9.67678 7.73744 9.67678 8.03033 9.96967Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                          <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 15.9697C8.32322 16.2626 8.32322 16.7374 8.03033 17.0303L5.53033 19.5303C5.23744 19.8232 4.76256 19.8232 4.46967 19.5303L2.96967 18.0303C2.67678 17.7374 2.67678 17.2626 2.96967 16.9697C3.26256 16.6768 3.73744 16.6768 4.03033 16.9697L5 17.9393L6.96967 15.9697C7.26256 15.6768 7.73744 15.6768 8.03033 15.9697Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                          <path fillRule="evenodd" clipRule="evenodd" d="M10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H20C20.4142 5.25 20.75 5.58579 20.75 6C20.75 6.41421 20.4142 6.75 20 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                          <path fillRule="evenodd" clipRule="evenodd" d="M10.25 12C10.25 11.5858 10.5858 11.25 11 11.25H20C20.4142 11.25 20.75 11.5858 20.75 12C20.75 12.4142 20.4142 12.75 20 12.75H11C10.5858 12.75 10.25 12.4142 10.25 12Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
-                          <path fillRule="evenodd" clipRule="evenodd" d="M10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H20C20.4142 17.25 20.75 17.5858 20.75 18C20.75 18.4142 20.4142 18.75 20 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18Z" fill={pathname == '/tasks' ? '#EEF2FC' : '#14367B' } />
+                      <Link to="/tasks/all" className={`${pathname == '/tasks/all' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
+                        <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
+                          <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 3.96967C8.32322 4.26256 8.32322 4.73744 8.03033 5.03033L5.53033 7.53033C5.23744 7.82322 4.76256 7.82322 4.46967 7.53033L2.96967 6.03033C2.67678 5.73744 2.67678 5.26256 2.96967 4.96967C3.26256 4.67678 3.73744 4.67678 4.03033 4.96967L5 5.93934L6.96967 3.96967C7.26256 3.67678 7.73744 3.67678 8.03033 3.96967Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                          <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 9.96967C8.32322 10.2626 8.32322 10.7374 8.03033 11.0303L5.53033 13.5303C5.23744 13.8232 4.76256 13.8232 4.46967 13.5303L2.96967 12.0303C2.67678 11.7374 2.67678 11.2626 2.96967 10.9697C3.26256 10.6768 3.73744 10.6768 4.03033 10.9697L5 11.9393L6.96967 9.96967C7.26256 9.67678 7.73744 9.67678 8.03033 9.96967Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                          <path fillRule="evenodd" clipRule="evenodd" d="M8.03033 15.9697C8.32322 16.2626 8.32322 16.7374 8.03033 17.0303L5.53033 19.5303C5.23744 19.8232 4.76256 19.8232 4.46967 19.5303L2.96967 18.0303C2.67678 17.7374 2.67678 17.2626 2.96967 16.9697C3.26256 16.6768 3.73744 16.6768 4.03033 16.9697L5 17.9393L6.96967 15.9697C7.26256 15.6768 7.73744 15.6768 8.03033 15.9697Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                          <path fillRule="evenodd" clipRule="evenodd" d="M10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H20C20.4142 5.25 20.75 5.58579 20.75 6C20.75 6.41421 20.4142 6.75 20 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                          <path fillRule="evenodd" clipRule="evenodd" d="M10.25 12C10.25 11.5858 10.5858 11.25 11 11.25H20C20.4142 11.25 20.75 11.5858 20.75 12C20.75 12.4142 20.4142 12.75 20 12.75H11C10.5858 12.75 10.25 12.4142 10.25 12Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
+                          <path fillRule="evenodd" clipRule="evenodd" d="M10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H20C20.4142 17.25 20.75 17.5858 20.75 18C20.75 18.4142 20.4142 18.75 20 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18Z" fill={pathname == '/tasks/all' ? '#EEF2FC' : '#14367B' } />
                         </svg>
 
                         Tasks
                       </Link>
                     </li>
 
-                    <li>
+                    {/* <li>
                       <a href="#" className={`${pathname == '/calendar' ? 'bg-[#14367B] text-[#EEF2FC]' : 'bg-[#EEF2FC] text-[#14367B]'} group flex gap-x-3 rounded-md px-5 w-52 py-3 text-base leading-6`}>
                         <svg className="h-6 w-6" viewBox="0 0 24 24" fill={pathname == '/calendar'? '#EEF2FC' : '#14367B' }  xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" clipRule="evenodd" d="M6 5.75C5.66848 5.75 5.35054 5.8817 5.11612 6.11612C4.8817 6.35054 4.75 6.66848 4.75 7V19C4.75 19.3315 4.8817 19.6495 5.11612 19.8839C5.35054 20.1183 5.66848 20.25 6 20.25H11.5C11.9142 20.25 12.25 20.5858 12.25 21C12.25 21.4142 11.9142 21.75 11.5 21.75H6C5.27065 21.75 4.57118 21.4603 4.05546 20.9445C3.53973 20.4288 3.25 19.7293 3.25 19V7C3.25 6.27065 3.53973 5.57118 4.05546 5.05546C4.57118 4.53973 5.27065 4.25 6 4.25H18C18.7293 4.25 19.4288 4.53973 19.9445 5.05546C20.4603 5.57118 20.75 6.27065 20.75 7V13C20.75 13.4142 20.4142 13.75 20 13.75C19.5858 13.75 19.25 13.4142 19.25 13V7C19.25 6.66848 19.1183 6.35054 18.8839 6.11612C18.6495 5.8817 18.3315 5.75 18 5.75H6Z" fill={pathname == '/calendar' ? '#EEF2FC' : '#14367B' } />
@@ -202,7 +204,7 @@ const MainLayout = () => {
 
                         Calendar
                       </a>
-                    </li>
+                    </li> */}
                   </ul>
                 </li>
                 <li>
@@ -212,7 +214,7 @@ const MainLayout = () => {
                       projects.map((project) => {
                         return (
                           <li key={project.id}>
-                            <Link to={ 'tasks/' + project.id } className="text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm">
+                            <Link to={ 'tasks/' + project.id } className={`text-[#14367B] group flex gap-x-3 rounded-md px-5 w-52 py-2 leading-6 text-sm ${projectId == project.id ? 'font-bold' : ''}`}>
                               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-blue-400 bg-blue-500 text-[0.625rem] font-medium text-white">{project.title.slice(0,1)}</span>
                               <span className="truncate">{ project.title }</span>
                             </Link>
@@ -264,7 +266,7 @@ const MainLayout = () => {
                 <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true"></div>
 
                 <div className="relative">
-                  <button type="button" className="-m-1.5 flex items-center p-1.5" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                  {/* <button type="button" className="-m-1.5 flex items-center p-1.5" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                     <span className="sr-only">Open user menu</span>
                     <img className="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=htmlFormat&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                     <span className="hidden lg:flex lg:items-center">
@@ -273,7 +275,7 @@ const MainLayout = () => {
                         <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                       </svg>
                     </span>
-                  </button>
+                  </button> */}
                   
                   <div className={`hidden absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none ${openSidebar ? 'transition ease-out duration-100 transhtmlForm opacity-0 scale-95' : 'transition ease-in duration-75 transhtmlForm opacity-0 scale-100'}`} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
                     <a href="#" className="block px-3 py-1 text-sm leading-6 text-gray-900" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your profile</a>
@@ -290,8 +292,7 @@ const MainLayout = () => {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/projects" element={<Projects />} />
-                <Route path="/tasks" element={<Tasks />} />
-                <Route path="/tasks/:project_id" element={<ProjectTasks />} />
+                <Route path="/tasks/:projectId" element={<Tasks />} />
               </Routes>
             </div>
           </main>

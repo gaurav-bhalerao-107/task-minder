@@ -27,7 +27,7 @@ const ProjectCard = ({ project }) => {
 
   return (
     <>
-      <section id="project-card" className="project-card pb-3 w-[450px] h-full">
+      <section id="project-card" className="project-card pb-3 h-full">
         <div className="relative py-5 px-3 rounded-[8px] bg-gray-100 h-full" draggable="true">
           <div className="">
             <div className="flex items-center justify-between">
@@ -74,13 +74,21 @@ const ProjectCard = ({ project }) => {
             <div className="pt-5 border-t-2 flex items-center w-full px-1">
               <div className="flex items-center w-full space-x-1">
                 {
-                    collaborators.map((item) => {
+                    
+                    collaborators.slice(0,5).map((item) => {
                         return (
                             <a key={item.id} href="#" className="relative rounded-full hover:opacity-75 -mt-2 flex items-center space-x-2">
                                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.670rem] font-medium text-white">{ item.name.slice(0,1) }</span>
                             </a>
                         )
                     })
+                }
+
+                {
+                  collaborators.length > 5 &&
+                  <a href="#" className="relative rounded-full hover:opacity-75 -mt-2 flex items-center space-x-2">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-blue-400 bg-blue-500 text-[0.670rem] font-medium text-white">{ collaborators.length  - 5 }+</span>
+                  </a>
                 }
               </div>
             </div>
@@ -117,14 +125,14 @@ const ProjectCard = ({ project }) => {
                     </svg>
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <h3 className="text-base font-semibold leading-6 text-gray-900" id="modal-title">Deactivate account</h3>
+                    <h3 className="text-base font-semibold leading-6 text-gray-900" id="modal-title">Are You Sure You Want to Delete?</h3>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">Are you sure you want to deactivate your account? All of your data will be permanently removed from our servers forever. This action cannot be undone.</p>
+                      <p className="text-sm text-gray-500">Deleting this project will also remove all its associated tasks permanently. Do you want to proceed with the deletion? Click “Delete” to confirm or “Cancel” to keep everything as is.</p>
                     </div>
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                  <button onClick={() => deleteProjects()} type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
+                  <button onClick={() => deleteProjects()} type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete</button>
                   <button onClick={() => setOpenProjectDeleteDialog(false)} type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
                 </div>
               </div>

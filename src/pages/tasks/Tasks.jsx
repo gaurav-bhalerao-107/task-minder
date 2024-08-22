@@ -1,32 +1,60 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "./tasks.css"
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import TaskSlider from '../../components/TaskSlider';
 import TaskColumn from '../../components/TaskColumn';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllTasks } from '../../store/reducers/taskReducer';
+import { fetchAllTasks, fetchAllProjects } from '../../store/reducers/taskReducer';
+import { taskStatus } from '../../constant/projects';
 
 const Tasks = () => {
   const location = useLocation();
   const { hash, pathname, search } = location;
   const [openTaskSlider, setOpenTaskSlider] = useState(false);
+  const { projectId } = useParams();
 
+  const [activeCard, setActiveCard] = useState(null)
+  
+  const dispatch = useDispatch();
+  
+  const tasks = useSelector((state) => state.tasks.tasks)
+  const projects = useSelector((state) => state.tasks.projects)
+
+  console.log("projects[0]...", projects[0]);
   const payload = {
     "id": null,
     "task_title": "",
     "task_description": "",
     "assigned_to": {},
-    "status": {"id": "todo", "label": "To Do"},
-    "project": {},
+    "status": taskStatus[0],
+    "project": projects.length > 0 ? projects[0] : {},
     "priority": "low"
   }
   
-  const dispatch = useDispatch();
+  const filterTasks = (status) => {
+    if(projectId == 'all') {
+      let allTasks = tasks?.filter((item) => {
+        return item.status.id == status;
+      })
+      return allTasks;
+    }
+
+    let allTasks = tasks?.filter((item) => {
+      return item.project.id == projectId && item.status.id == status;
+    })
+    return allTasks
+  }
   
-  const tasks = useSelector((state) => state.tasks.tasks)
   useEffect(() => {
+    console.log("pathname...", pathname);
+    dispatch(fetchAllProjects());
     dispatch(fetchAllTasks());
   }, [])
+
+  const showError = () => {
+    alert("Please create a project first!");
+    return 0;
+  }
 
   return (
     <>
@@ -59,7 +87,7 @@ const Tasks = () => {
             </div>
             {/* new task */}
             <div className="cursor-pointer">
-              <button onClick={() => setOpenTaskSlider(true)} type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <button onClick={() => projects.length > 0 ? setOpenTaskSlider(true) : showError()} type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Create New Task
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" viewBox="0 0 25 24" fill="none">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12.5 4.25C12.9142 4.25 13.25 4.58579 13.25 5V19C13.25 19.4142 12.9142 19.75 12.5 19.75C12.0858 19.75 11.75 19.4142 11.75 19V5C11.75 4.58579 12.0858 4.25 12.5 4.25Z" fill="white"/>
@@ -82,7 +110,10 @@ const Tasks = () => {
                 boxShadow: '0px 1px 10px 0px rgba(242, 113, 84, 0.10)'
               }} 
               title="To Do"
-              tasks={tasks?.filter((item) => item.status.id == 'todo') || []}
+              column="todo"
+              tasks={filterTasks('todo') || []}
+              setActiveCard={setActiveCard}
+              activeCard={activeCard}
             />
 
             {/* in progress task list */}
@@ -94,7 +125,10 @@ const Tasks = () => {
                 boxShadow: '0px 1px 10px 0px rgba(255, 175, 71, 0.10)'
               }} 
               title="In Progress"
-              tasks={tasks?.filter((item) => item.status.id == 'in-progress') || []}
+              column="in-progress"
+              tasks={filterTasks('in-progress') || []}
+              setActiveCard={setActiveCard}
+              activeCard={activeCard}
             />
 
             {/* done task list */}
@@ -106,7 +140,10 @@ const Tasks = () => {
                 boxShadow: '0px 1px 10px 0px rgba(131, 195, 140, 0.10)'
               }} 
               title="Done"
-              tasks={tasks?.filter((item) => item.status.id == 'done') || []}
+              column="done"
+              tasks={filterTasks('done') || []}
+              setActiveCard={setActiveCard}
+              activeCard={activeCard}
             />
           </div>
         </section>

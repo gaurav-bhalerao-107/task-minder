@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllProjects, fetchAllTasks, fetchProjectTasks } from '../store/reducers/taskReducer';
 import { useParams } from 'react-router-dom';
+import { taskStatus } from '../constant/projects';
 
 const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   const { id, task_title, task_description, assigned_to, status, project, priority } = payload;
@@ -17,20 +18,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   // tasks
   const [openTaskDropdown, setOpenTaskDropdown] = useState(false);
   const [selectedTaskStatus, setSelectedTaskStatus] = useState(status);
-  const taskStatusList = [
-    {
-      "id": "todo",
-      "label": "To Do"
-    },
-    {
-      "id": "in-progress",
-      "label": "In Progress"
-    },
-    {
-      "id": "done",
-      "label": "Done"
-    }
-  ];
+  const taskStatusList = taskStatus;
 
   // projects
   const [openProjectDropdown, setOpenProjectDropdown] = useState(false);
@@ -42,26 +30,56 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   // assigned to
   const [openAssignedToDropdown, setOpenAssignedToDropdown] = useState(false);
   const [selectedAssignedUser, setSelectedAssignedUser] = useState(assigned_to);
-  const all_users = [
-    {
-      "id": "gaurav-bhalerao",
-      "name": "Gaurav Bhalerao",
-      "username": "@gaurav",
-      "image": "",
-    },
-    {
-      "id": "john-doe",
-      "name": "John Doe",
-      "username": "@john",
-      "image": "",
-    },
-    {
-      "id": "warran-wade",
-      "name": "Warran Wade",
-      "username": "@warran",
-      "image": "",
-    },
-  ];
+  const [allCollaborators, setAllCollaborators] = useState([])
+  const [filteredCollaborators, setFilteredCollaborators] = useState([])
+  const [searchCollaborators, setSearchCollaborators] = useState("");
+  
+  useEffect(() => {
+    console.log("Component mounted");
+
+    let initialCollaborators = [
+      {
+        "id": "gaurav-bhalerao",
+        "name": "Gaurav Bhalerao",
+        "username": "@gaurav",
+        "image": "",
+      },
+      {
+        "id": "john-doe",
+        "name": "John Doe",
+        "username": "@john",
+        "image": "",
+      },
+      {
+        "id": "warran-wade",
+        "name": "Warran Wade",
+        "username": "@warran",
+        "image": "",
+      },
+    ]
+    setAllCollaborators(initialCollaborators)
+    setFilteredCollaborators(initialCollaborators);
+    
+    return () => {
+      console.log("Component unmounted");
+    };
+  }, [])
+
+  const filterCollaborators = () => {
+    if(searchCollaborators == "") {
+      setFilteredCollaborators(allCollaborators);
+      return 0;
+    }
+    
+    let collaborators = allCollaborators.filter((item) => {
+      return item.name.toLowerCase().includes(searchCollaborators.toLowerCase())
+    })
+    setFilteredCollaborators(collaborators);
+  }
+
+  useEffect(() => {
+    filterCollaborators();
+  }, [searchCollaborators, allCollaborators])
 
   // fetching all projects 
   const projects = useSelector((state) => state.tasks.projects)
@@ -137,6 +155,12 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
   }
 
   const saveTask = () => {
+    // Object.keys(selectedAssignedUser).length == 0
+    if(title == "" || description == "" || Object.keys(selectedTaskStatus).length == 0 || Object.keys(selectedProject).length == 0 || selectedPriority == ""){
+      alert("Please enter the required fields!")
+      return 0;
+    }
+
     let id = generateRandomId()
     let payload = {
       "id": id,
@@ -145,7 +169,8 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
       "assigned_to": selectedAssignedUser,
       "status": selectedTaskStatus,
       "project": selectedProject,
-      "priority": selectedPriority
+      "priority": selectedPriority,
+      "sort": 0,
     }
 
     const items = JSON.parse(localStorage.getItem('task-minder'));
@@ -157,9 +182,16 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
     } else {
       dispatch(fetchAllTasks());
     }
+    clearFormData();
   }
 
   const editTask = () => {
+    // Object.keys(selectedAssignedUser).length == 0
+    if(title == "" || description == "" || Object.keys(selectedTaskStatus).length == 0 || Object.keys(selectedProject).length == 0 || selectedPriority == ""){
+      alert("Please enter the required fields!")
+      return 0;
+    }
+
     let tasks = JSON.parse(localStorage.getItem('task-minder'));
     tasks.map((item) => {
       if(item.id == id) {
@@ -178,6 +210,15 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
     } else {
       dispatch(fetchAllTasks());
     }
+    clearFormData();
+  }
+
+  const clearFormData = () => {
+    setTitle(null);
+    setDescription("");
+    setSelectedTaskStatus(taskStatus[0]);
+    setSelectedPriority("low");
+    setSelectedProject(projects.length > 0 ? projects[0] : {});
   }
   
   if(!openTaskSlider){
@@ -220,24 +261,24 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                         <div className="space-y-6 pb-5 pt-6">
                           {/* title */}
                           <div className="">
-                            <label htmlFor="task-name" className="block text-sm font-medium leading-6 text-gray-900">Task</label>
+                            <label htmlFor="task-name" className="block text-sm font-medium leading-6 text-gray-900">Task <span className='text-red-500'>*</span></label>
                             <div className="mt-2">
                               <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" name="task-name" id="task-name" placeholder="Task Name" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                             </div>
                           </div>
                           {/* description */}
                           <div className="">
-                            <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                            <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">Description <span className='text-red-500'>*</span></label>
                             <div className="mt-2">
                               <textarea value={description} onChange={(e) => setDescription(e.target.value)} id="description" name="description" placeholder="Description" rows="4" className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
                             </div>
                           </div>
                           {/* assigned to */}
-                          <div className="">
-                            <h3 className="text-sm font-medium leading-6 text-gray-900">Assigned To</h3>
+                          {/* <div className="">
+                            <h3 className="text-sm font-medium leading-6 text-gray-900">Assigned To <span className='text-red-500'>*</span></h3>
                             <div className="mt-2">
                             <div className="relative mt-2">
-                              <input id="combobox" placeholder="Assign To" value={selectedAssignedUser.name} onClick={() => setOpenAssignedToDropdown(!openAssignedToDropdown)} type="text" className="cursor-pointer w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" role="combobox" aria-controls="options" aria-expanded="false" />
+                              <input placeholder="Assign To" value={ openAssignedToDropdown ? searchCollaborators : selectedAssignedUser.name} onChange={(e) => setSearchCollaborators(e.target.value)} onClick={() => setOpenAssignedToDropdown(!openAssignedToDropdown)} id="collaborators" name="collaborators" type="text" className="cursor-pointer w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" role="combobox" aria-controls="options" aria-expanded="false" />
                               <button onClick={() => setOpenAssignedToDropdown(!openAssignedToDropdown)} type="button" className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                                 <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                   <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
@@ -247,7 +288,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                                 openAssignedToDropdown &&
                                 <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" id="options" role="listbox">
                                   {
-                                    all_users.map((item) => {
+                                    filteredCollaborators.map((item) => {
                                       return (
                                         <li onClick={() => selectAssignedUser(item)} key={item.id} className={`relative cursor-pointer select-none py-2 pl-3 pr-9 ${selectedAssignedUser.id == item.id ? 'text-white bg-indigo-600' : 'text-gray-900 hover:text-white hover:bg-indigo-600'}`} id="option-0" role="option" tabIndex="-1">
                                           <div className="flex items-center">
@@ -270,11 +311,11 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                               }
                             </div>
                             </div>
-                          </div>
+                          </div> */}
                           {/* task status */}
                           <div className="">
                             <div>
-                              <label id="listbox-label" className="block text-sm font-medium leading-6 text-gray-900">Task Status</label>
+                              <label id="listbox-label" className="block text-sm font-medium leading-6 text-gray-900">Task Status <span className='text-red-500'>*</span></label>
                               <div className="relative mt-2">
                                 <button onClick={() => setOpenTaskDropdown(!openTaskDropdown)} type="button" className="cursor-pointer relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                                   <span className="flex items-center">
@@ -319,7 +360,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                           {/* project */}
                           <div className="">
                             <div>
-                              <label id="listbox-label" className="block text-sm font-medium leading-6 text-gray-900">Project</label>
+                              <label id="listbox-label" className="block text-sm font-medium leading-6 text-gray-900">Project <span className='text-red-500'>*</span></label>
                               <div className="relative mt-2">
                                 <button onClick={() => setOpenProjectDropdown(!openProjectDropdown)} type="button" className="cursor-pointer relative w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                                   <span className="flex items-center">
@@ -363,7 +404,7 @@ const TaskSlider = ({ type, openTaskSlider, setOpenTaskSlider, payload }) => {
                           </div>
                           {/* priority */}
                           <div className="">
-                            <h3 className="text-sm font-medium leading-6 text-gray-900">Priority</h3>
+                            <h3 className="text-sm font-medium leading-6 text-gray-900">Priority <span className='text-red-500'>*</span></h3>
                             <div className="mt-2">
                               <div className="flex space-x-3">
                                 <button onClick={() => setSelectedPriority("low")} type="button" className={`rounded px-5 py-2 ${ selectedPriority == "low" ? 'ring-indigo-600 ring-2' : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' } px-2 py-1 text-sm font-semibold shadow-sm ring-1 ring-inset`}>

@@ -45,7 +45,7 @@ const Dashboard = () => {
               </svg>
             </div>
             {/* new task */}
-            <div className="cursor-pointer">
+            {/* <div className="cursor-pointer">
               <button type="button" className="relative inline-flex items-center rounded-md bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Create New Task
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" viewBox="0 0 25 24" fill="none">
@@ -53,7 +53,7 @@ const Dashboard = () => {
                   <path fillRule="evenodd" clipRule="evenodd" d="M4.75 12C4.75 11.5858 5.08579 11.25 5.5 11.25H19.5C19.9142 11.25 20.25 11.5858 20.25 12C20.25 12.4142 19.9142 12.75 19.5 12.75H5.5C5.08579 12.75 4.75 12.4142 4.75 12Z" fill="white"/>
                 </svg>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
